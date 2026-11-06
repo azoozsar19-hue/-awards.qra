@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>اختبار المعلم المتميز | معتز الصرايرة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EEF2F7; --surface:#FFFFFF; --ink:#1B2A4A; --ink-2:#3A4B6B; --muted:#5E6E8A; --line:#D7DFEA;
+  --sheet:#A3245E; --sheet-soft:#F7E6EE; --ok:#1F7A57; --ok-soft:#E1F2EA; --bad:#B8322F; --bad-soft:#FBE7E5;
+  --flag:#B7791F; --flag-soft:#FBF0DC; --focus:#2F6FEB;
+  --r-lg:20px; --r-md:14px; --r-sm:10px;
+  --shadow:0 1px 0 rgba(27,42,74,.06), 0 8px 24px -12px rgba(27,42,74,.18);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D1524; --surface:#151F33; --ink:#E7EDF6; --ink-2:#C3CEE0; --muted:#93A3BE; --line:#26334D;
+    --sheet:#E77EAB; --sheet-soft:#3A1F2E; --ok:#4CC38A; --ok-soft:#173528; --bad:#F2776E; --bad-soft:#3B1E1C;
+    --flag:#E8B04B; --flag-soft:#3A2D14; --focus:#7AA5FF; --shadow:0 1px 0 rgba(0,0,0,.3), 0 10px 30px -14px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D1524; --surface:#151F33; --ink:#E7EDF6; --ink-2:#C3CEE0; --muted:#93A3BE; --line:#26334D;
+  --sheet:#E77EAB; --sheet-soft:#3A1F2E; --ok:#4CC38A; --ok-soft:#173528; --bad:#F2776E; --bad-soft:#3B1E1C;
+  --flag:#E8B04B; --flag-soft:#3A2D14; --focus:#7AA5FF; --shadow:0 1px 0 rgba(0,0,0,.3), 0 10px 30px -14px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Readex Pro",system-ui,sans-serif;font-size:17px;line-height:1.75;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px);background-size:100% 34px;background-attachment:fixed}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:8px}
+.wrap{max-width:760px;margin:0 auto;padding:18px 16px 120px}
+.hidden{display:none!important}
+.muted{color:var(--muted)} .small{font-size:.88rem}
+h1,h2,h3{line-height:1.35;margin:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:22px}
+.stack{display:grid;gap:16px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;padding:28px 22px 24px;border-inline-start:6px solid var(--sheet)}
+.hero .award{color:var(--sheet);font-weight:600;font-size:.92rem}
+.hero h1{font-size:clamp(1.9rem,6vw,2.6rem);font-weight:700;letter-spacing:-.01em;margin:6px 0 10px}
+.hero p{margin:0;color:var(--ink-2);max-width:56ch}
+.bubbles{display:flex;gap:10px;margin:18px 0 4px}
+.bubbles span{width:30px;height:30px;border-radius:50%;border:2px solid var(--sheet);display:grid;place-items:center;font-size:.85rem;font-weight:600;color:var(--sheet)}
+.bubbles span.fill{background:var(--sheet);color:var(--surface);animation:fillIn .6s .3s both cubic-bezier(.2,.9,.3,1.3)}
+@keyframes fillIn{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+.credit{display:flex;align-items:center;gap:12px;margin-top:18px;padding-top:16px;border-top:1px dashed var(--line)}
+.credit .mono{width:44px;height:44px;border-radius:50%;background:var(--ink);color:var(--surface);display:grid;place-items:center;font-weight:700;font-size:1.05rem;flex:none}
+.credit small{display:block;color:var(--muted);font-size:.8rem;line-height:1.3}
+.credit strong{font-size:1.05rem}
+.stats{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:.92rem;color:var(--ink-2)}
+.stats b{color:var(--ink);font-weight:700}
+
+/* ---------- settings ---------- */
+.group{margin-top:18px}
+.group:first-of-type{margin-top:6px}
+.glabel{font-weight:600;font-size:.95rem;margin-bottom:8px;display:block}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{position:relative;display:block;cursor:pointer}
+.tile input{position:absolute;opacity:0;pointer-events:none}
+.tile .in{display:block;height:100%;border:1.5px solid var(--line);border-radius:var(--r-md);padding:14px;background:var(--surface);transition:border-color .15s,background .15s,transform .1s}
+.tile .in b{display:flex;align-items:center;gap:8px;font-weight:600}
+.tile .in span{display:block;font-size:.85rem;color:var(--muted);margin-top:4px;line-height:1.5}
+.tile svg{width:20px;height:20px;flex:none}
+.tile input:checked + .in{border-color:var(--ink);background:var(--paper);box-shadow:inset 0 0 0 1px var(--ink)}
+.tile input:focus-visible + .in{outline:3px solid var(--focus);outline-offset:2px}
+.tile:active .in{transform:scale(.98)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative;cursor:pointer}
+.chip input{position:absolute;opacity:0;pointer-events:none}
+.chip span{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:6px 14px;border:1.5px solid var(--line);border-radius:999px;background:var(--surface);font-size:.92rem;transition:all .15s}
+.chip span::before{content:"";width:12px;height:12px;border-radius:50%;border:1.5px solid var(--muted);flex:none;transition:all .15s}
+.chip input:checked + span{border-color:var(--ink);background:var(--ink);color:var(--surface)}
+.chip input:checked + span::before{border-color:var(--surface);background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.chip input:focus-visible + span{outline:3px solid var(--focus);outline-offset:2px}
+.chip:active span{transform:scale(.96)}
+.more{margin-top:18px;border-top:1px solid var(--line);padding-top:12px}
+.more summary{cursor:pointer;font-weight:600;color:var(--ink-2);list-style:none;display:flex;align-items:center;gap:8px;min-height:40px}
+.more summary::-webkit-details-marker{display:none}
+.more summary::after{content:"";width:9px;height:9px;border-inline-start:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .2s;margin-inline-start:4px}
+.more[open] summary::after{transform:rotate(135deg)}
+.launch{margin-top:22px;display:grid;gap:10px}
+.summary-line{font-size:.92rem;color:var(--ink-2);text-align:center}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 18px;border-radius:var(--r-md);border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font-weight:600;cursor:pointer;transition:transform .1s,background .15s,border-color .15s,box-shadow .15s;user-select:none}
+.btn:hover{border-color:var(--ink-2)}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn svg{width:20px;height:20px;flex:none}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.btn.primary:hover{box-shadow:0 6px 18px -8px var(--ink)}
+.btn.sheet{background:var(--sheet);border-color:var(--sheet);color:#fff}
+.btn.big{min-height:58px;font-size:1.1rem;border-radius:16px;width:100%}
+.btn.icon{min-width:48px;padding:10px}
+.btn.ghost{background:transparent}
+.btn.on{background:var(--flag-soft);border-color:var(--flag);color:var(--flag)}
+
+/* ---------- notes ---------- */
+.acc{border-top:1px solid var(--line)}
+.acc:first-of-type{border-top:0}
+.acc summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 0;font-weight:600;font-size:1.02rem}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary .pm{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;flex:none;transition:transform .2s,background .2s}
+.acc summary .pm::before{content:"+";font-weight:500}
+.acc[open] summary .pm{transform:rotate(45deg);background:var(--sheet-soft);border-color:var(--sheet);color:var(--sheet)}
+.acc .body{padding:0 0 16px;color:var(--ink-2)}
+.acc .body p{margin:6px 0}
+.acc ul,.acc ol{margin:6px 0;padding-inline-start:22px}
+.acc li{margin-bottom:6px}
+.acc b{color:var(--ink)}
+.rules li::marker{color:var(--sheet)}
+
+/* ---------- quiz ---------- */
+.topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);margin:-18px -16px 16px;padding:12px 16px 10px;border-bottom:1px solid var(--line)}
+.topbar .row1{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.counter{font-weight:700;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.counter small{font-weight:400;color:var(--muted);font-size:.85rem;margin-inline-start:6px}
+.tools{display:flex;gap:8px;align-items:center}
+.timer{font-variant-numeric:tabular-nums;font-weight:700;padding:6px 12px;border-radius:999px;background:var(--surface);border:1.5px solid var(--line);display:inline-flex;gap:6px;align-items:center}
+.timer svg{width:16px;height:16px}
+.timer.low{color:var(--bad);border-color:var(--bad);background:var(--bad-soft);animation:pulse 1s infinite alternate}
+@keyframes pulse{to{opacity:.7}}
+.track{height:6px;background:var(--line);border-radius:999px;margin-top:10px;overflow:hidden}
+.track div{height:100%;background:var(--sheet);border-radius:999px;transition:width .35s}
+.sheetgrid{margin-bottom:14px}
+.sheetgrid .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.82rem;color:var(--muted);margin-bottom:10px}
+.sheetgrid .legend i{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-inline-end:4px;border:1.5px solid var(--muted)}
+.palette{display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:8px}
+.palette button{aspect-ratio:1;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;font-size:.85rem;font-weight:600;font-variant-numeric:tabular-nums;transition:transform .1s}
+.palette button:active{transform:scale(.9)}
+.palette button.ans{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.palette button.flag{box-shadow:0 0 0 3px var(--flag)}
+.palette button.cur{border-color:var(--sheet);border-width:3px}
+.qcard{padding:22px 20px}
+.qmeta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--paper);color:var(--ink-2);border:1px solid var(--line)}
+.tag.sit{background:var(--sheet-soft);color:var(--sheet);border-color:transparent}
+.tag.kn{background:var(--ink);color:var(--surface);border-color:transparent}
+.qtext{font-size:1.2rem;font-weight:600;line-height:1.8;margin:0 0 18px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:14px;align-items:center;width:100%;text-align:right;background:var(--surface);border:1.5px solid var(--line);border-radius:var(--r-md);padding:12px 14px;cursor:pointer;min-height:58px;transition:border-color .15s,background .15s,transform .08s}
+.opt:hover{border-color:var(--ink-2)}
+.opt:active{transform:scale(.99)}
+.opt .b{flex:none;width:34px;height:34px;border-radius:50%;border:2px solid var(--sheet);color:var(--sheet);display:grid;place-items:center;font-weight:700;transition:background .2s,color .2s,transform .2s}
+.opt.sel{border-color:var(--ink);background:var(--paper)}
+.opt.sel .b{background:var(--ink);border-color:var(--ink);color:var(--surface);animation:fillIn .25s both}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.ok .b{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft)}
+.opt.bad .b{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt[disabled]{cursor:default}
+.opt[disabled]:active{transform:none}
+.explain{margin-top:16px;padding:14px 16px;border-radius:var(--r-md);background:var(--paper);border-inline-start:4px solid var(--ok);animation:rise .25s both}
+.explain.no{border-inline-start-color:var(--bad)}
+.explain strong{display:block;margin-bottom:2px}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.kbd{margin-top:14px;font-size:.8rem;color:var(--muted)}
+.kbd kbd{font-family:inherit;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:0 6px;background:var(--surface)}
+.dock{position:fixed;bottom:0;left:0;right:0;z-index:20;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
+.dock .inner{max-width:760px;margin:0 auto;display:grid;grid-template-columns:auto 1fr auto auto;gap:8px}
+
+/* ---------- results ---------- */
+.score{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center}
+.ring{width:132px;height:132px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:12}
+.ring .bg{stroke:var(--line)}
+.ring .fg{stroke:var(--sheet);stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)}
+.ring .val{position:absolute;inset:0;display:grid;place-items:center;font-size:2rem;font-weight:700;font-variant-numeric:tabular-nums}
+.score h2{font-size:1.25rem;margin-bottom:6px}
+.meter{margin:12px 0}
+.meter .lab{display:flex;justify-content:space-between;font-size:.92rem;margin-bottom:6px}
+.meter .bar{height:10px;background:var(--line);border-radius:999px;overflow:hidden}
+.meter .bar div{height:100%;background:var(--ink);border-radius:999px;transition:width 1s .2s}
+.topics{display:grid;gap:2px}
+.trow{display:grid;grid-template-columns:1fr 60px 90px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+.trow .mini{height:6px;background:var(--line);border-radius:999px;overflow:hidden}
+.trow .mini div{height:100%}
+.trow .n{font-variant-numeric:tabular-nums;color:var(--muted);text-align:center}
+.rev{border:1px solid var(--line);border-radius:var(--r-md);padding:14px 16px;margin-bottom:10px;background:var(--surface);border-inline-start:5px solid var(--bad)}
+.rev.c{border-inline-start-color:var(--ok)}
+.rev .q{font-weight:600;margin:4px 0 8px}
+.rev .a{font-size:.92rem;margin:2px 0}
+.rev .a.ok{color:var(--ok);font-weight:600}
+.rev .e{font-size:.9rem;color:var(--muted);margin-top:6px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* ---------- modal & toast ---------- */
+.modal{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:rgba(13,21,36,.45)}
+.modal .box{background:var(--surface);border-radius:var(--r-lg);padding:22px;max-width:420px;width:100%;box-shadow:0 30px 60px -20px rgba(0,0,0,.5);animation:rise .2s both}
+.modal h3{font-size:1.2rem;margin-bottom:8px}
+.modal ul{margin:8px 0 16px;padding-inline-start:20px;color:var(--ink-2)}
+.modal .actions{margin-top:8px}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:8px 16px;border-radius:999px;font-size:.9rem;z-index:60;animation:rise .2s both}
+
+
+/* ---------- answer-sheet home ---------- */
+.sheetcard{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+.sheetcard::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:22px;background:radial-gradient(circle at 11px 18px,var(--paper) 5px,transparent 5.5px) 0 0/22px 36px repeat-y;border-inline-end:1.5px dashed var(--line)}
+.sheetin{padding:22px 22px 22px 22px;padding-inline-start:40px}
+.shead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.shead .award{color:var(--sheet);font-weight:600;font-size:.9rem;line-height:1.5}
+.shead h1{font-size:clamp(1.75rem,6.4vw,2.5rem);font-weight:700;line-height:1.25;margin:4px 0 0}
+.fields{display:grid;grid-template-columns:1.6fr 1fr 1fr;margin-top:18px;border:1.5px solid var(--ink);border-radius:12px;overflow:hidden}
+.field{padding:8px 12px;border-inline-start:1.5px solid var(--ink);min-width:0}
+.field:first-child{border-inline-start:0}
+.field small{display:block;font-size:.74rem;color:var(--muted);line-height:1.3}
+.field b{font-size:1.15rem;font-weight:700;font-variant-numeric:tabular-nums}
+.field .sign{font-family:"Aref Ruqaa",serif;font-size:1.55rem;line-height:1.35;color:var(--sheet);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gridhead{display:flex;flex-direction:column;margin:20px 0 10px;gap:0}
+.gridhead span{font-weight:600}
+.gridhead small{color:var(--muted);font-size:.82rem}
+.qgrid{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;direction:rtl}
+.qgrid i{aspect-ratio:1;border-radius:50%;border:1.5px solid color-mix(in srgb,var(--ink) 35%,transparent);display:block;transition:background .25s,border-color .25s,transform .25s,opacity .25s}
+.qgrid i.on{background:var(--ink);border-color:var(--ink);animation:pop .35s backwards cubic-bezier(.2,.9,.3,1.4)}
+.qgrid i.hl{background:var(--sheet);border-color:var(--sheet);transform:scale(1.08)}
+.qgrid i.dim{opacity:.25}
+.qgrid i.k{border-style:dashed}
+@keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+.topicbar{display:flex;gap:8px;overflow-x:auto;padding:12px 2px 4px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+.tchip{flex:none;cursor:pointer;border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:.86rem;min-height:38px;display:inline-flex;align-items:center;gap:6px;transition:all .15s}
+.tchip em{font-style:normal;font-variant-numeric:tabular-nums;font-size:.78rem;color:var(--muted)}
+.tchip[aria-pressed="true"]{background:var(--sheet);border-color:var(--sheet);color:#fff}
+.tchip[aria-pressed="true"] em{color:#fff;opacity:.85}
+.tchip:active{transform:scale(.95)}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.stamp{position:relative;cursor:pointer;display:block}
+.stamp input{position:absolute;opacity:0;pointer-events:none}
+.stamp .in{display:flex;flex-direction:column;gap:4px;height:100%;padding:14px;border:2px dashed var(--line);border-radius:16px;transition:all .18s}
+.stamp .in b{display:flex;gap:8px;align-items:center;font-size:1.02rem}
+.stamp .in span{font-size:.82rem;color:var(--muted);line-height:1.5}
+.stamp svg{width:22px;height:22px}
+.stamp input:checked + .in{border-style:solid;border-color:var(--ink);background:var(--paper);transform:rotate(-1deg)}
+.stamp input:focus-visible + .in{outline:3px solid var(--focus);outline-offset:2px}
+.seg2{display:grid;grid-template-columns:repeat(3,1fr);margin-top:12px;border:1.5px solid var(--line);border-radius:14px;padding:4px;gap:4px;background:var(--paper)}
+.seg2 label{cursor:pointer;position:relative}
+.seg2 input{position:absolute;opacity:0;pointer-events:none}
+.seg2 span{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:52px;border-radius:10px;font-weight:700;font-size:1.05rem;line-height:1.2;transition:all .15s}
+.seg2 span small{font-weight:400;font-size:.72rem;color:var(--muted)}
+.seg2 input:checked + span{background:var(--surface);box-shadow:0 2px 8px -3px rgba(27,42,74,.35)}
+.seg2 input:focus-visible + span{outline:3px solid var(--focus)}
+.go{margin-top:16px}
+.go .btn{width:100%;min-height:60px;font-size:1.15rem;border-radius:16px}
+.go .hint{text-align:center;color:var(--ink-2);font-size:.9rem;margin-top:8px}
+.signoff{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding-top:14px;border-top:1.5px dashed var(--line)}
+.signoff small{color:var(--muted);font-size:.8rem;display:block}
+.signoff .sig2{font-family:"Aref Ruqaa",serif;font-size:clamp(1.25rem,5.4vw,1.7rem);white-space:nowrap;color:var(--ink);line-height:1.2}
+.seal{width:62px;height:62px;border-radius:50%;border:2px solid var(--sheet);color:var(--sheet);display:grid;place-items:center;text-align:center;font-size:.62rem;font-weight:700;line-height:1.25;transform:rotate(-12deg);flex:none;box-shadow:inset 0 0 0 3px var(--surface),inset 0 0 0 4.5px var(--sheet)}
+.themefab{position:absolute;top:12px;left:12px}
+@media (max-width:520px){
+  .fields{grid-template-columns:1fr 1fr}
+  .field:first-child{grid-column:1/-1;border-bottom:1.5px solid var(--ink)}
+  .field:nth-child(2){border-inline-start:0}
+  .qgrid{gap:5px}
+  .sheetin{padding:18px 16px 18px;padding-inline-start:34px}
+}
+
+
+.how{list-style:none;margin:18px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;position:relative}
+.how li{background:var(--paper);border-radius:14px;padding:12px 10px;text-align:center;position:relative}
+.how i{font-style:normal;display:grid;place-items:center;width:30px;height:30px;margin:0 auto 6px;border-radius:50%;background:var(--sheet);color:#fff;font-weight:700}
+.how b{display:block;font-size:.92rem}
+.how span{display:block;font-size:.76rem;color:var(--muted);line-height:1.5;margin-top:2px}
+.reveal{margin-top:12px;width:100%}
+.study{margin-top:14px;border:1.5px solid var(--line);border-radius:var(--r-md);background:var(--surface);overflow:hidden;animation:rise .3s .05s both}
+.study>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--sheet-soft);color:var(--sheet);font-weight:700}
+.study>summary::-webkit-details-marker{display:none}
+.study>summary svg{width:20px;height:20px;flex:none}
+.study>summary .chev{margin-inline-start:auto;transition:transform .2s}
+.study[open]>summary .chev{transform:rotate(180deg)}
+.study .sb{padding:4px 16px 14px;color:var(--ink-2);font-size:.96rem}
+.study .sb p{margin:10px 0}
+.study .sb ul,.study .sb ol{margin:8px 0;padding-inline-start:22px}
+.study .sb li{margin-bottom:6px}
+.study .sb b{color:var(--ink)}
+.study .ex{background:var(--paper);border-radius:10px;padding:10px 12px}
+.study .tip{border-inline-start:4px solid var(--flag);background:var(--flag-soft);border-radius:8px;padding:10px 12px;color:var(--ink)}
+.tbl{width:100%;border-collapse:collapse;font-size:.88rem;margin:8px 0;display:block;overflow-x:auto}
+.tbl th,.tbl td{border:1px solid var(--line);padding:6px 8px;text-align:right;vertical-align:top}
+.tbl th{background:var(--paper);color:var(--ink)}
+.explain .why{display:block;margin-top:4px}
+#explain{scroll-margin-top:96px}
+.picked{font-size:.9rem;color:var(--muted);margin-top:6px}
+@media (max-width:520px){.how{grid-template-columns:1fr}.how li{display:grid;grid-template-columns:auto 1fr;text-align:right;column-gap:10px;align-items:center}.how i{grid-row:span 2;margin:0}}
+
+footer.sig{margin-top:28px;text-align:center;font-size:.85rem;color:var(--muted)}
+footer.sig strong{color:var(--ink-2)}
+.theme{position:absolute;top:14px;left:14px}
+
+@media (max-width:520px){
+  .tiles{grid-template-columns:1fr}
+  .score{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .trow{grid-template-columns:1fr 50px 64px}
+  .dock .inner{grid-template-columns:auto 1fr auto auto}
+  .dock .lbl{display:none}
+  .qtext{font-size:1.1rem}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ================= START ================= -->
+<section id="start" class="stack">
+  <header class="sheetcard">
+    <div class="sheetin">
+      <button class="btn icon ghost themefab" id="themeBtn" aria-label="تبديل الوضع الليلي">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+      <div class="shead"><div>
+        <div class="award">جائزة الملكة رانيا العبدالله<br>للمعلم المتميز</div>
+        <h1>دفتر الدراسة للتقييم الكتابي</h1>
+      </div></div>
+
+      <div class="fields">
+        <div class="field"><small>إعداد وتجميع</small><span class="sign">أ. معتز الصرايرة</span></div>
+        <div class="field"><small>الأسئلة</small><b id="fN">100</b></div>
+        <div class="field"><small>الطريقة</small><b id="fT">دراسة</b></div>
+      </div>
+
+      <div class="gridhead"><span id="gridTitle">مئة سؤال مختار</span><small id="gridSub">تسعون موقفاً وعشرة أسئلة معرفة</small></div>
+      <div class="qgrid" id="qgrid" aria-hidden="true"></div>
+      <div class="topicbar" id="topicbar" role="group" aria-label="اختر موضوعاً للتدرب عليه"></div>
+
+      <input type="radio" name="mode" value="practice" checked hidden>
+      <ol class="how" aria-label="كيف تدرس">
+        <li><i>١</i><b>اقرأ الموقف</b><span>وفكّر كما تفكر لجنة الجائزة</span></li>
+        <li><i>٢</i><b>اختر إجابتك</b><span>أو اطلب الشرح مباشرة</span></li>
+        <li><i>٣</i><b>ادرس الموضوع</b><span>شرح السؤال وبطاقة مفصلة</span></li>
+      </ol>
+
+      <div class="seg2" id="countSeg" role="radiogroup" aria-label="عدد الأسئلة"></div>
+
+      <div class="go">
+        <button class="btn primary" id="startBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+          ابدأ الدراسة</button>
+        <div class="hint" id="timeNote"></div>
+      </div>
+
+      <div class="signoff">
+        <div><small>إعداد وتجميع الأسئلة</small><div class="sig2">الأستاذ معتز الصرايرة</div></div>
+        <div class="seal" aria-hidden="true">المعلم<br>المتميز<br>٢٠٢٦</div>
+      </div>
+    </div>
+  </header>
+
+  <section class="panel" aria-labelledby="revH">
+    <h2 id="revH" style="font-size:1.25rem;margin-bottom:6px">مراجعة قبل البدء</h2>
+    <details class="acc" open><summary>قاعدة الحسم عند التردد<span class="pm" aria-hidden="true"></span></summary>
+      <div class="body"><ul class="rules">
+        <li>التشخيص يسبق العلاج؛ اختر ما يعالج السبب لا العَرَض.</li>
+        <li>اختر ما يتمركز حول الطالب، ويحفظ كرامته، ويبتعد عن العقاب.</li>
+        <li>اختر ما يُشرك الآخرين: الأهل، والمرشد، والزملاء، والمجتمع.</li>
+        <li>اختر الأثر المستدام الذي ينقل الطالب من المعرفة إلى السلوك.</li>
+        <li>في أسئلة "عدا" اقرأ الخيارات كلها قبل الاختيار.</li>
+      </ul></div>
+    </details>
+    <details class="acc"><summary>التعلم التعاوني<span class="pm" aria-hidden="true"></span></summary>
+      <div class="body">
+        <p>طلبة في مجموعات صغيرة غير متجانسة (4–6) يعملون لهدف مشترك، فيتعلم كل فرد ويساعد غيره على التعلم.</p>
+        <p><b>العناصر الخمسة (جونسون وجونسون):</b></p>
+        <ol>
+          <li><b>الاعتماد المتبادل الإيجابي:</b> نجاح الفرد مرتبط بنجاح المجموعة.</li>
+          <li><b>المسؤولية الفردية:</b> كل عضو محاسب عن تعلمه ودوره.</li>
+          <li><b>التفاعل المعزز وجهاً لوجه:</b> ترتيب المقاعد والحوار والدعم المباشر.</li>
+          <li><b>المهارات الاجتماعية:</b> الإصغاء، وانتظار الدور، والنقد اللطيف، وتُعلَّم بشكل مقصود.</li>
+          <li><b>معالجة عمل المجموعة:</b> تأمل في نهاية العمل: ما الذي نجح؟ وما الذي نحسّنه؟</li>
+        </ol>
+        <p><b>دور المعلم:</b> يخطط ويشكّل المجموعات ويوزع الأدوار (قارئ، مسجّل، ميقاتي، مقرّر)، ثم يتجول ويراقب ويدعم، ويقوّم فردياً وجماعياً معاً.</p>
+        <ul>
+          <li><b>جيكسو:</b> مجموعة أصلية، ثم مجموعة خبراء، ثم يعلّم كل عضو مجموعته.</li>
+          <li><b>فكّر–زاوج–شارك:</b> تفكير فردي، ثم حوار مع زميل، ثم مشاركة مع الصف.</li>
+          <li><b>الرؤوس المرقمة:</b> يُنادى رقم عشوائي ليجيب عن مجموعته.</li>
+          <li><b>فرق التحصيل (STAD):</b> عرض، ثم دراسة في الفريق، ثم اختبار فردي، ثم نقاط تحسّن.</li>
+        </ul>
+      </div>
+    </details>
+    <details class="acc"><summary>العمل الجماعي مقابل التعاوني<span class="pm" aria-hidden="true"></span></summary>
+      <div class="body"><ul>
+        <li><b>العمل الجماعي التقليدي:</b> يجلس الطلبة معاً، وقد ينجز بعضهم العمل ويستفيد الآخرون، دون أدوار أو محاسبة فردية.</li>
+        <li><b>التعلم التعاوني:</b> بنية مقصودة فيها هدف مشترك، واعتماد متبادل، وأدوار، ومسؤولية فردية، وتقويم فردي وجماعي.</li>
+        <li><b>عوامل نجاح الفريق:</b> الهدف المشترك، والاعتماد المتبادل، والمسؤولية الفردية، والتواصل، وتوزيع المهام حسب القدرات. الاهتمام بالناتج وحده ليس منها.</li>
+        <li><b>المجموعات مرنة:</b> تثبيتها أو تغييرها يعود لطبيعة الموضوع والطلبة.</li>
+      </ul></div>
+    </details>
+    <details class="acc"><summary>خرائط المفاهيم<span class="pm" aria-hidden="true"></span></summary>
+      <div class="body">
+        <p>صممها <b>نوفاك</b> استناداً إلى <b>التعلم ذي المعنى لأوزوبل</b>، وتنظّم المفاهيم هرمياً من الأعم في الأعلى إلى الأخص.</p>
+        <ul>
+          <li><b>المكونات:</b> مفاهيم، وكلمات ربط على الخطوط مثل «يتكون من»، وقضايا (مفهوم وكلمة ربط ومفهوم)، ووصلات عرضية بين الفروع، وأمثلة.</li>
+          <li><b>الأنواع:</b> هرمية للتصنيفات، ومتسلسلة للمسارات مثل مسار الدم، وعنكبوتية حول مفهوم مركزي.</li>
+          <li><b>الاستخدامات:</b> منظم متقدم، وأداة شرح وربط، وتلخيص ومراجعة، وتشخيص للمفاهيم الخاطئة.</li>
+          <li><b>التصحيح (نوفاك):</b> القضية الصحيحة 1، والمستوى الهرمي 5، والوصلة العرضية الصحيحة 10، والمثال 1.</li>
+          <li><b>مقارنة بالخريطة الذهنية:</b> الذهنية تتفرع بحرية من فكرة مركزية دون كلمات ربط. أما خريطة المفاهيم فهرمية بكلمات ربط.</li>
+          <li><b>للطالب الضعيف:</b> خريطة نصف مكتملة يكملها، وهذا سقالة وتمايز معاً.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+  
+</section>
+
+<!-- ================= QUIZ ================= -->
+<section id="quiz" class="hidden">
+  <div class="topbar">
+    <div class="row1">
+      <div class="counter" id="qCounter"></div>
+      <div class="tools">
+        <span class="timer hidden" id="timer"></span>
+        <button class="btn icon ghost" id="paletteBtn" aria-label="ورقة الإجابة" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.2"/><circle cx="12" cy="6" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="6" cy="12" r="2.2"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/><circle cx="18" cy="12" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="12" cy="18" r="2.2"/><circle cx="18" cy="18" r="2.2"/></svg>
+        </button>
+        <button class="btn icon ghost" id="exitBtn" aria-label="إنهاء الدراسة">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="track"><div id="prog"></div></div>
+  </div>
+
+  <div id="paletteBox" class="panel sheetgrid hidden">
+    <div class="legend"><span><i style="background:var(--ink);border-color:var(--ink)"></i>مُجاب</span><span><i style="box-shadow:0 0 0 2px var(--flag);border-color:transparent"></i>للمراجعة</span><span><i style="border:3px solid var(--sheet)"></i>الحالي</span></div>
+    <div class="palette" id="palette"></div>
+  </div>
+
+  <article class="panel qcard">
+    <div class="qmeta" id="qMeta"></div>
+    <h2 class="qtext" id="qText"></h2>
+    <div class="opts" id="opts" role="group" aria-label="الخيارات"></div>
+    <button class="btn ghost reveal" id="revealBtn">لا أعرف، أرني الشرح</button>
+    <div id="explain" class="explain hidden" aria-live="polite"></div>
+    <div id="studyBox"></div>
+    <div class="kbd">لوحة المفاتيح: <kbd>1</kbd>–<kbd>4</kbd> للاختيار، <kbd>←</kbd> التالي، <kbd>→</kbd> السابق، <kbd>F</kbd> للمراجعة</div>
+  </article>
+  <footer class="sig">إعداد وتجميع الأسئلة: <strong>الأستاذ معتز الصرايرة</strong></footer>
+</section>
+
+<!-- ================= RESULTS ================= -->
+<section id="results" class="hidden stack">
+  <div class="panel">
+    <div class="score">
+      <div class="ring"><svg viewBox="0 0 132 132"><circle class="bg" cx="66" cy="66" r="56"/><circle class="fg" id="ringFg" cx="66" cy="66" r="56" stroke-dasharray="351.86" stroke-dashoffset="351.86"/></svg><div class="val" id="scorePct"></div></div>
+      <div>
+        <h2 id="scoreMsgH"></h2>
+        <div id="scoreRaw" style="font-weight:600"></div>
+        <div class="muted small" id="scoreTime"></div>
+        <p id="scoreMsg" style="margin:8px 0 0;color:var(--ink-2)"></p>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <h2 style="font-size:1.15rem">الإتقان حسب المجال</h2>
+    <div id="domainBars"></div>
+  </div>
+  <div class="panel">
+    <h2 style="font-size:1.15rem">الأداء حسب الموضوع</h2>
+    <p class="small muted" style="margin:4px 0 8px">مرتبة من الأضعف، فابدأ المراجعة من الأعلى.</p>
+    <div class="topics" id="topicTable"></div>
+  </div>
+  <div class="panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+      <h2 style="font-size:1.15rem">مراجعة الإجابات</h2>
+      <div class="chips">
+        <label class="chip"><input type="radio" name="rf" value="w" checked><span>الخاطئة فقط</span></label>
+        <label class="chip"><input type="radio" name="rf" value="all"><span>الكل</span></label>
+      </div>
+    </div>
+    <div id="review"></div>
+  </div>
+  <div class="actions">
+    <button class="btn sheet big" id="retryWrong">أعد ما لم أتقنه</button>
+    <button class="btn big" id="newExam">جلسة جديدة</button>
+  </div>
+  <footer class="sig">إعداد وتجميع الأسئلة: <strong>الأستاذ معتز الصرايرة</strong></footer>
+</section>
+</div>
+
+<nav class="dock hidden" id="nav" aria-label="التنقل بين الأسئلة">
+  <div class="inner">
+    <button class="btn icon" id="prevBtn" aria-label="السؤال السابق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>
+    <button class="btn primary" id="nextBtn"><span id="nextLbl">التالي</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <button class="btn" id="flagBtn" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 21V4m0 0h11l-2 4 2 4H5"/></svg><span class="lbl">للمراجعة</span></button>
+    <button class="btn" id="submitBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12l5 5L20 7"/></svg><span class="lbl">إنهاء</span></button>
+  </div>
+</nav>
+
+<div class="modal hidden" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="box">
+    <h3 id="mTitle"></h3>
+    <div id="mBody"></div>
+    <div class="actions">
+      <button class="btn primary" id="mOk"></button>
+      <button class="btn" id="mCancel"></button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DOM = {k:"المعرفة", p:"الممارسات الفضلى", a:"الاتجاهات"};
+const Q = [{"d": "p", "t": "إدارة الصف والسلوك", "q": "طالب لا يتفاعل في الحصة ولا يحل واجباته منذ بداية الفصل. الإجراء الأنسب أولاً:", "o": ["أجري تشخيصاً تربوياً لمعرفة أسباب عدم تفاعله، ثم أبني خطة على أساسه", "أجلسه في المقعد الأمامي ليكون قريباً مني فيزداد انتباهه", "أتواصل مع ولي أمره ليتابع حل واجباته في البيت", "أكلفه بمهام بسيطة ينجح فيها ليستعيد دافعيته"], "a": 0, "e": "كل الخيارات تربوية، لكن التشخيص يسبقها جميعاً؛ فدون معرفة السبب قد يعالج المعلم العَرَض ويترك المشكلة.", "m": true, "c": "diag"}, {"d": "p", "t": "إدارة الصف والسلوك", "q": "طالب يقاطع الشرح باستمرار ليلفت الانتباه. الإجراء الأنسب وفق مبادئ تعديل السلوك:", "o": ["أتجاهل المقاطعة، وأعزز سلوكه فور رفع يده للمشاركة", "أنبهه بلطف في كل مرة يقاطع فيها", "أذكّره بقواعد الصف أمام زملائه كلما قاطع", "أؤجل الرد على مداخلاته حتى نهاية الحصة"], "a": 0, "e": "سلوك لفت الانتباه يُطفأ بالتجاهل، ويُعزَّز السلوك البديل المرغوب. التنبيه المتكرر يمنحه الانتباه الذي يريده.", "m": true, "c": "reinf"}, {"d": "p", "t": "إدارة الصف والسلوك", "q": "تنمّر طالب لفظياً على زميله أثناء النشاط الصفي. الإجراء الأنسب:", "o": ["أوقف السلوك وأطمئن على المتضرر، ثم أحاور المتنمر وأوثق الموقف وأنسق مع المرشد", "أوقف السلوك وأحيل الطالبين مباشرة إلى المرشد ليتولى الموقف", "أوقف السلوك وأتصل بولي أمر المتنمر لإبلاغه بما حدث", "أوقف السلوك وأطلب من المتنمر الاعتذار لزميله أمام الصف"], "a": 0, "e": "الترتيب السليم: حماية المتضرر، ثم حوار تربوي، وتوثيق، وتنسيق مع المرشد. الاعتذار العلني قد يحرج، والإحالة المباشرة تُغفل دور المعلم.", "m": true, "c": "code"}, {"d": "p", "t": "إدارة الصف والسلوك", "q": "طالب يستخدم هاتفه خلسة أثناء الحصة. التصرف الأنسب:", "o": ["أقترب منه بهدوء وأنبهه بإشارة دون إيقاف الدرس، ثم أتحدث معه بعد الحصة", "أطلب منه وضع الهاتف على مكتبي حتى نهاية الحصة", "أوقف الشرح وأذكّر الصف كله بتعليمات استخدام الهاتف", "أسجل المخالفة وفق مدونة السلوك وأبلغ الإدارة"], "a": 0, "e": "التدخل غير اللفظي يحافظ على سير الدرس وكرامة الطالب، والحوار الفردي بعد الحصة يعالج السلوك.", "m": true, "c": "code"}, {"d": "p", "t": "إدارة الصف والسلوك", "q": "في بداية العام تريد بناء قواعد صفية فاعلة. أي الإجراءات أكثر تأثيراً؟", "o": ["أشرك الطلبة في صياغة قواعد قليلة إيجابية وواضحة، وأتابع تطبيقها بعدالة", "أعرض عليهم قواعد مدونة السلوك كاملة ويوقّعون عليها", "أصوغ القواعد بنفسي بعبارات إيجابية وأعلقها في الصف", "أضع القواعد مع الطلبة وأحدد عقوبة لكل مخالفة"], "a": 0, "e": "المشاركة تزيد الالتزام، والتطبيق والمتابعة أكثر تأثيراً من مجرد الإعداد أو التعليق على الجدار.", "m": true, "c": "rules"}, {"d": "p", "t": "إدارة الصف والسلوك", "q": "لاحظت تأخر أحد الطلبة يومياً عن الحصة الأولى. فإنك:", "o": ["أتحدث معه لمعرفة أسباب التأخر قبل اتخاذ أي إجراء", "أسجل تأخره يومياً وأبلغ الإدارة وفق التعليمات", "أتواصل مع ولي أمره فوراً ليضمن حضوره مبكراً", "أسمح له بالدخول وأطلب منه تعويض ما فاته في الاستراحة"], "a": 0, "e": "معرفة السبب أولاً؛ قد يكون التأخر لظرف أسري أو صحي يحتاج معالجة مختلفة.", "m": true, "c": "diag"}, {"d": "p", "t": "إدارة الصف والسلوك", "q": "طالبة متفوقة تراجع أداؤها فجأة وأصبحت منعزلة. الأنسب:", "o": ["أتحدث معها على انفراد بلطف، وأنسق مع المرشد لمعرفة الأسباب", "أكثف لها أنشطة المشاركة الصفية لتستعيد ثقتها", "أتواصل مع ولي أمرها لإبلاغه بتراجع علاماتها", "أمنحها مهلة حتى نهاية الشهر قبل التدخل"], "a": 0, "e": "التغير المفاجئ مع العزلة مؤشر نفسي يحتاج حواراً آمناً وتدخلاً مختصاً، لا إجراءً أكاديمياً.", "m": true, "c": "diag"}, {"d": "p", "t": "إدارة الصف والسلوك", "q": "طالب يكرر سلوكاً يعطّل الحصة رغم التنبيه المتكرر. الإجراء الأنسب:", "o": ["أحيله إلى المرشد التربوي لدراسة حالته، مع توثيق المواقف", "أخرجه من الحصة حفاظاً على وقت زملائه", "أتجاهل سلوكه حتى يتوقف من تلقاء نفسه", "أتصل بولي أمره لمناقشة سلوكه هاتفياً"], "a": 0, "e": "بعد استنفاد التنبيه، تكرار السلوك يحتاج متخصصاً يدرس الحالة. الإخراج من الحصة يحرم الطالب من حقه في التعلم.", "m": true, "c": "code"}, {"d": "p", "t": "إدارة الصف والسلوك", "q": "حدثت مشاجرة بين طالبين في الصف. التصرف الأنسب:", "o": ["أهدّئ الموقف وأفصل بينهما، وأتريث لمعرفة الأسباب قبل اتخاذ القرار", "أحيلهما فوراً إلى الإدارة لاتخاذ الإجراء المناسب", "أطلب من كل منهما الاعتذار للآخر وأكمل الحصة", "أخرجهما من الصف حتى يهدأ الموقف"], "a": 0, "e": "التفكير قبل اتخاذ القرار يمنع الظلم، ومعرفة الأسباب تعالج المشكلة من جذورها.", "m": true, "c": "diag"}, {"d": "p", "t": "إدارة الصف والسلوك", "q": "أثناء المقابلات الفردية مع الطلبة ضعاف التحصيل، ينبغي أن يتجنب المعلم:", "o": ["مواجهة الطالب بأخطائه مباشرة في بداية المقابلة", "إخبار الطالب بالهدف من المقابلة", "إعادة بعض العبارات التي قالها الطالب", "إنهاء المقابلة بعبارات تؤكد تقبله للطالب"], "a": 0, "e": "البدء بالمواجهة يغلق باب الحوار. المقابلة الناجحة تبدأ بالطمأنة وبناء الثقة.", "m": true, "c": "diag"}, {"d": "p", "t": "إدارة الصف والسلوك", "q": "للوصول بالطلبة إلى الإدارة الذاتية لسلوكهم:", "o": ["أبني الثقة والإحساس بالمسؤولية المشتركة، وأمنحهم أدواراً في إدارة الصف", "أطبق نظام نقاط ومكافآت أسبوعية للسلوك الإيجابي", "أوضح لهم العواقب المترتبة على كل مخالفة", "أعيّن مراقباً من الطلبة يتابع الالتزام بالقواعد"], "a": 0, "e": "الإدارة الذاتية تنبع من وعي داخلي بالمسؤولية، لا من حوافز أو رقابة خارجية.", "m": true, "c": "rules"}, {"d": "p", "t": "إدارة الصف والسلوك", "q": "لاحظ معلم أن عدداً من طلبته ينامون أثناء شرحه. السبب الأهم الذي يجب أن يعالجه:", "o": ["تمركز التعليم حول المعلم دون مشاركة الطلبة", "استخدام أسلوب واحد في التدريس", "الاعتماد على وسائل تعليمية تقليدية", "التركيز على الجانب المعرفي دون المهاري"], "a": 0, "e": "الخيارات الثلاثة الأخرى صور لسبب واحد جذري: الطالب متلقٍ لا مشارك.", "m": true, "c": "diag"}, {"d": "p", "t": "استراتيجيات التدريس", "q": "أثناء الشرح أظهر بعض الطلبة عدم اهتمامهم بالدرس. كيف تتصرف؟", "o": ["أنوّع في استراتيجيات التدريس لاستثارة اهتمامهم", "أطرح عليهم أسئلة مباشرة لإعادة انتباههم", "أغير أماكن جلوسهم لأقربهم مني", "أختصر الشرح وأنتقل إلى حل التمارين"], "a": 0, "e": "التنويع يراعي أنماط التعلم المختلفة ويعيد الدافعية للصف كله، أما الخيارات الأخرى فحلول مؤقتة لأفراد.", "m": true, "c": "vary"}, {"d": "p", "t": "استراتيجيات التدريس", "q": "لتقريب مفاهيم الدرس المجردة للطلبة، الإجراء الأنسب:", "o": ["تشبيه المفهوم بشيء مألوف للطلبة من حياتهم", "تبسيط التعريف وصياغته بلغة سهلة", "تكرار شرح المفهوم بأكثر من صيغة", "تقديم أمثلة إضافية من الكتاب المدرسي"], "a": 0, "e": "التشبيه يربط الجديد بالمألوف وينقل الفكرة من المحسوس إلى المجرد.", "m": true, "c": "vary"}, {"d": "p", "t": "استراتيجيات التدريس", "q": "عند تخطيط درس بالتدريس المباشر باستخدام PowerPoint، الممارسة الأنسب في مرحلة التهيئة:", "o": ["ربط الدرس بخبرات الطلبة السابقة", "عرض أهداف الدرس على الشريحة الأولى", "عرض صورة مثيرة تتعلق بموضوع الدرس", "مراجعة سريعة لتعريفات الدرس السابق"], "a": 0, "e": "التهيئة الفاعلة تنشّط الخبرات السابقة ليُبنى عليها الجديد، وهذا أشمل من عرض الأهداف أو صورة جاذبة.", "m": true, "c": "vary"}, {"d": "p", "t": "استراتيجيات التدريس", "q": "عند استخدام الاستقصاء في درس عن أسباب شح المياه في الأردن، الإجراء الأفضل:", "o": ["إتاحة الفرصة للطلبة لطرح فرضيات وجمع أدلة لاختبارها", "عرض المعلم الأسباب ومناقشتها مع الطلبة", "تزويد الطلبة بخطوات محددة لجمع المعلومات من الكتاب", "عرض نتائج دراسة سابقة وتحليلها مع الطلبة"], "a": 0, "e": "الاستقصاء في أي مادة ينمي التفكير حين يطرح الطالب الفرضيات ويجمع الأدلة ويختبرها بنفسه، لا حين يتلقى الأسباب جاهزة.", "m": true, "c": "inquiry"}, {"d": "p", "t": "استراتيجيات التدريس", "q": "طرحت سؤالاً ولم يرفع أحد يده. الأنسب:", "o": ["أعيد صياغة السؤال وأمنح وقت انتظار كافياً، ثم أطلب مناقشته في أزواج", "أعطي تلميحاً يقرّب الإجابة ثم أنتظر", "أختار طالباً بالاسم ليجيب", "أقسم السؤال إلى أسئلة أبسط وأجيب عن أولها"], "a": 0, "e": "وقت الانتظار مع النقاش الثنائي (فكّر–زاوج–شارك) يرفع المشاركة ويمنح الجميع فرصة للتفكير.", "m": true, "c": "questions"}, {"d": "p", "t": "استراتيجيات التدريس", "q": "أردت الحصول على أكبر عدد ممكن من آراء الطلبة حول قضية العمل التطوعي وإثراء معلوماتهم. تبدأ الدرس بأسئلة:", "o": ["مفتوحة متشعبة", "مفتوحة محددة", "سابرة متعمقة", "متقاربة (متجمعة)"], "a": 0, "e": "الأسئلة المتشعبة تقبل إجابات وآراء متعددة، أما المتقاربة فلها إجابة واحدة.", "m": true, "c": "questions"}, {"d": "p", "t": "استراتيجيات التدريس", "q": "لاحظت أن طلبتك لا يستطيعون إبداء آراء وبدائل حول مشكلة في الدرس. الأسلوب الأنسب:", "o": ["العصف الذهني", "المناقشة الموجهة", "حل المشكلات", "لعب الأدوار"], "a": 0, "e": "العصف الذهني يطلق توليد الأفكار والبدائل بكثرة دون نقد مبدئي.", "m": true, "c": "brain"}, {"d": "p", "t": "استراتيجيات التدريس", "q": "أجاب طالب إجابة خاطئة أثناء النقاش. الاستجابة الأنسب:", "o": ["أشكره على المحاولة، وأطرح سؤالاً سابراً يقوده لاكتشاف خطئه", "أشكره، وأطلب من زميل آخر تصحيح الإجابة", "أشكره، وأوضح الإجابة الصحيحة مباشرة", "أعيد طرح السؤال على الصف كله"], "a": 0, "e": "السؤال السابر يحفظ ثقة الطالب ويجعله يصل إلى الصواب بنفسه.", "m": true, "c": "questions"}, {"d": "p", "t": "استراتيجيات التدريس", "q": "تبقّى من الحصة خمس دقائق ولم تُنهِ الشرح. الأنسب:", "o": ["ألخص ما تم مع الطلبة وأقوّم فهمهم بسؤال ختامي، وأكمل في الحصة القادمة", "أكمل الشرح بسرعة لأنهي الأهداف المخططة", "أطلب منهم قراءة الجزء المتبقي في البيت", "أعطيهم واجباً على الجزء الذي شُرح"], "a": 0, "e": "غلق الدرس والتحقق من الفهم أهم من إكمال الكم.", "m": true, "c": "closure"}, {"d": "p", "t": "استراتيجيات التدريس", "q": "يُحكم على استراتيجية التدريس بأنها جيدة إذا أتاحت الفرصة لـ:", "o": ["تعلم الطلبة من مصادر متنوعة بأنفسهم", "شرح موضوع الدرس كاملاً في الوقت المحدد", "ضبط الصف وتحقيق الهدوء", "إتقان الطلبة للمادة المقررة في الكتاب"], "a": 0, "e": "الاستراتيجية الجيدة تجعل الطالب نشطاً يبني معرفته من مصادر متنوعة. (انتبه: بعض الملفات تظلل «ضبط الصف»، وهي لا تتفق مع معايير الجائزة.)", "m": true, "c": "vary"}, {"d": "p", "t": "التعلم التعاوني والعمل الجماعي", "q": "شكا طالب أن زميله لم يعمل في المشروع الجماعي وأخذ العلامة نفسها. لتجنب ذلك مستقبلاً:", "o": ["أضيف تقويماً فردياً وتقويم الأقران وبطاقة أدوار موثقة", "أطلب من المجموعة توزيع العلامة حسب جهد كل عضو", "أحاور الطالب الذي لم يعمل وأخصم من علامته", "أعيد تشكيل المجموعات في المشروع القادم"], "a": 0, "e": "المسؤولية الفردية تتحقق بأدوار واضحة وتقويم فردي إلى جانب الجماعي، وهذا حل للبنية لا للحالة.", "m": true, "c": "coop"}, {"d": "p", "t": "التعلم التعاوني والعمل الجماعي", "q": "أعلن المعلم أن علامة المجموعة ستُحسب من مجموع تحسّن علامات أفرادها، فأصبح الطلبة يساعدون بعضهم. هذا يحقق عنصر:", "o": ["الاعتماد المتبادل الإيجابي", "المسؤولية الفردية", "معالجة عمل المجموعة", "التفاعل المعزز وجهاً لوجه"], "a": 0, "e": "الاعتماد المتبادل: نجاح الفرد مرتبط بنجاح المجموعة، فيحرص الجميع على تعلم الجميع.", "m": true, "c": "coop"}, {"d": "p", "t": "التعلم التعاوني والعمل الجماعي", "q": "لاحظت أن طالباً واحداً في كل مجموعة ينجز العمل والبقية يتفرجون. أي عنصر من عناصر التعلم التعاوني يحتاج إلى معالجة؟", "o": ["المسؤولية الفردية", "الاعتماد المتبادل الإيجابي", "المهارات الاجتماعية", "معالجة عمل المجموعة"], "a": 0, "e": "حين لا يُحاسب كل عضو على دوره وتعلمه، يختبئ البعض خلف المجموعة.", "m": true, "c": "coop"}, {"d": "p", "t": "التعلم التعاوني والعمل الجماعي", "q": "قسّم معلم اللغة العربية درس عناصر القصة إلى أربعة أجزاء (الشخصيات، المكان والزمان، الحبكة، الحل)؛ يدرس كل عضو جزءاً مع زملاء من مجموعات أخرى، ثم يعود ليعلّمه لمجموعته الأصلية. هذه استراتيجية:", "o": ["جيكسو (التعلم بالتجزئة)", "الاستقصاء الجماعي", "فرق التحصيل الطلابي (STAD)", "الرؤوس المرقمة"], "a": 0, "e": "جيكسو: مجموعة أصلية، ثم مجموعة خبراء، ثم تعليم الأقران.", "m": true, "c": "coopstr"}, {"d": "p", "t": "التعلم التعاوني والعمل الجماعي", "q": "طرح المعلم سؤالاً، وطلب من كل طالب التفكير وحده دقيقة، ثم مناقشة إجابته مع زميله، ثم عرضها على الصف. هذه استراتيجية:", "o": ["فكّر–زاوج–شارك", "الرؤوس المرقمة", "جيكسو", "المناقشة الموجهة"], "a": 0, "e": "ثلاث مراحل: تفكير فردي، ثم حوار ثنائي، ثم مشاركة صفية.", "m": true, "c": "coopstr"}, {"d": "p", "t": "التعلم التعاوني والعمل الجماعي", "q": "الدور الأنسب للمعلم أثناء عمل المجموعات التعاونية:", "o": ["يتجول بين المجموعات، يلاحظ ويدعم ويتدخل عند الحاجة", "يتابع المجموعة الأضعف بشكل مكثف حتى تنهي مهمتها", "يجيب عن أسئلة المجموعات التي تطلب المساعدة من مكتبه", "يراقب الوقت وينبّه المجموعات لإنجاز المهمة"], "a": 0, "e": "المعلم ميسّر نشط يتابع جميع المجموعات، لا مجموعة محددة.", "m": true, "c": "coopteach"}, {"d": "p", "t": "التعلم التعاوني والعمل الجماعي", "q": "طالب مسيطر يستحوذ على النقاش في مجموعته ويُسكت الآخرين. الإجراء الأنسب:", "o": ["أعيد توزيع الأدوار، وأوضح قواعد المشاركة، وأدرب المجموعة على الإصغاء وتبادل الأدوار", "أعينه مقرراً للمجموعة ليوجه طاقته", "أنقله إلى مجموعة من المتفوقين", "أنبهه على انفراد بضرورة إتاحة الفرصة لغيره"], "a": 0, "e": "تنظيم الأدوار وتعليم المهارات الاجتماعية يعالج بنية المجموعة كلها، لا سلوك فرد واحد فقط.", "m": true, "c": "coopteach"}, {"d": "p", "t": "التعلم التعاوني والعمل الجماعي", "q": "تريد تشكيل مجموعات تعاونية لمشروع عن المواقع السياحية في الأردن. الطريقة الأنسب:", "o": ["مجموعات غير متجانسة من 4–6 طلبة، لكل طالب دور محدد", "مجموعات متجانسة في التحصيل لتناسب المهمة مستوى كل مجموعة", "مجموعات يختارها الطلبة وفق رغباتهم لزيادة الانسجام", "مجموعات غير متجانسة من 8–10 طلبة لتنوع الخبرات"], "a": 0, "e": "التنوع داخل المجموعة يتيح تعليم الأقران، والحجم الصغير يضمن مشاركة الجميع.", "m": true, "c": "coopteach"}, {"d": "k", "t": "التعلم التعاوني والعمل الجماعي", "q": "كل مما يأتي من عوامل نجاح العمل الفريقي ما عدا:", "o": ["الاهتمام بالناتج فقط", "الهدف المشترك", "الاعتماد المتبادل", "المسؤولية الفردية"], "a": 0, "e": "نجاح الفريق يقوم على الهدف والاعتماد المتبادل والمسؤولية، لا على الناتج وحده.", "m": false, "c": "coop"}, {"d": "p", "t": "خرائط المفاهيم", "q": "عند ترتيب المفاهيم في خريطة مفاهيم هرمية لوحدة «الأعداد» في الرياضيات:", "o": ["يوضع المفهوم الأعم في الأعلى، ثم الأقل عمومية تحته", "يوضع المفهوم الأهم للامتحان في الأعلى", "ترتب المفاهيم حسب ورودها في الكتاب", "يوضع أكثر المفاهيم تكراراً في المركز"], "a": 0, "e": "الخريطة الهرمية تتدرج من الأشمل إلى الأخص.", "m": true, "c": "cmap"}, {"d": "p", "t": "خرائط المفاهيم", "q": "رسم طالب في خريطة مفاهيم لوحدة الجغرافيا خطاً يربط «المناخ» في فرع العوامل الطبيعية بـ«الزراعة» في فرع الأنشطة الاقتصادية. يدل هذا على:", "o": ["فهم عميق وتكامل في المعرفة (وصلة عرضية)", "خطأ في الترتيب الهرمي للخريطة", "خلط بين مفهومين متشابهين", "حاجة إلى إعادة تنظيم الخريطة"], "a": 0, "e": "الوصلات العرضية بين الفروع تدل على إدراك العلاقات، وتأخذ أعلى درجة في تصحيح نوفاك.", "m": true, "c": "cmap"}, {"d": "k", "t": "خرائط المفاهيم", "q": "الكلمات التي تُكتب على الخطوط بين المفاهيم في خريطة المفاهيم، مثل «يتكون من»، تسمى:", "o": ["كلمات الربط", "القضايا", "الوصلات العرضية", "المفاهيم الفرعية"], "a": 0, "e": "كلمات الربط تحدد العلاقة، والمفهوم مع كلمة الربط والمفهوم الآخر يكوّنون قضية.", "m": false, "c": "cmap"}, {"d": "p", "t": "خرائط المفاهيم", "q": "كتب طالب في خريطة مفاهيم للرياضيات: «الضرب ← يُنتج دائماً ← عدداً أكبر». أهم استخدام للخريطة هنا:", "o": ["كشف مفهوم خاطئ لدى الطالب لمعالجته", "تقويم مهارة الطالب في رسم الخرائط", "الحكم على تحصيله في نهاية الوحدة", "تلخيص الوحدة للطالب"], "a": 0, "e": "خرائط المفاهيم أداة تشخيصية تكشف التصورات البديلة.", "m": true, "c": "cmapuse"}, {"d": "p", "t": "خرائط المفاهيم", "q": "رسم المعلم دائرة كتب فيها «المواطنة»، وتفرعت منها فروع حرة بالألوان والصور دون كلمات ربط. ما استخدمه:", "o": ["خريطة ذهنية", "خريطة مفاهيم هرمية", "خريطة مفاهيم عنكبوتية", "شبكة مفاهيمية"], "a": 0, "e": "الخريطة الذهنية تتفرع بحرية دون كلمات ربط. أما خرائط المفاهيم بأنواعها فتعتمد كلمات الربط.", "m": true, "c": "cmap"}, {"d": "p", "t": "خرائط المفاهيم", "q": "أعطى المعلم الطلبة الضعاف خريطة مفاهيم نصف مكتملة ليكملوها، وأعطى المتفوقين قائمة مفاهيم ليبنوا خريطتهم كاملة. هذا الإجراء يجمع بين:", "o": ["السقالات التعليمية والتعليم المتمايز", "التعلم التعاوني والتعليم المتمايز", "السقالات التعليمية والتعلم الذاتي", "التعليم المتمايز والتقويم التكويني"], "a": 0, "e": "الخريطة الناقصة دعم مؤقت (سقالة)، وتنويع المهمة حسب المستوى تمايز.", "m": true, "c": "cmapuse"}, {"d": "p", "t": "المفاهيم الخاطئة", "q": "لضمان عدم تكوّن مفاهيم خاطئة لدى الطلبة، أعمل على:", "o": ["ربط المفاهيم بالحياة", "تقييم استيعاب الطلبة لهذه المفاهيم", "توفير أنشطة تعزز الخبرات التعليمية", "تقديم معرفة علمية شاملة للطلبة"], "a": 0, "e": "هذا السؤال ورد في الامتحان بهذه الخيارات. المعتمد: ربط المفاهيم بالحياة، لأن المعرفة المرتبطة بالواقع تصبح ذات معنى.", "m": true, "c": "misc"}, {"d": "p", "t": "المفاهيم الخاطئة", "q": "سألت طلبتك: أيهما أكبر، 0.25 أم 0.3؟ فأجاب كثيرون: 0.25 لأن فيه أرقاماً أكثر. الإجراء الأنسب:", "o": ["أكشف طريقة تفكيرهم بأسئلة، ثم أقدم نشاطاً بنماذج محسوسة (لوحة المئة) يُظهر قيمة كل عدد", "أصحح الإجابة وأشرح قاعدة مقارنة الأعداد العشرية", "أطلب منهم حل تمارين إضافية على المقارنة", "أكتب القاعدة على السبورة ليحفظوها"], "a": 0, "e": "التغيير المفاهيمي في أي مادة: كشف التصور، ثم إحداث تعارض بدليل محسوس، ثم بناء المفهوم الصحيح. شرح القاعدة وحده لا يزيل التصور الخاطئ.", "m": true, "c": "misc"}, {"d": "p", "t": "المفاهيم الخاطئة", "q": "يعتقد طلبتك أن جمع الاسم في العربية يكون دائماً بإضافة «ون» أو «ات». أنسب نشاط لتصحيح المفهوم:", "o": ["أعرض نصاً فيه جموع تكسير، فيكتشفون أن قاعدتهم لا تنطبق، ثم نبني المفهوم معاً", "أشرح أنواع الجموع الثلاثة بجدول منظم", "أعطيهم قائمة بجموع التكسير ليحفظوها", "أصحح الأخطاء في دفاترهم كلما ظهرت"], "a": 0, "e": "المثال المضاد الذي يتعارض مع التصور الخاطئ ويكتشفه الطالب بنفسه أقوى أداة لتصحيحه.", "m": true, "c": "misc"}, {"d": "p", "t": "المفاهيم الخاطئة", "q": "الأداة الأنسب للكشف عن المفاهيم الخاطئة لدى الطلبة قبل بدء الوحدة:", "o": ["اختبار تشخيصي بأسئلة تتطلب تفسيراً", "اختبار تشخيصي من نوع صواب وخطأ", "سؤال الطلبة شفوياً عن معرفتهم بالموضوع", "مراجعة علاماتهم في العام السابق"], "a": 0, "e": "الأسئلة التفسيرية تكشف طريقة التفكير، أما الصواب والخطأ فيسمح بالتخمين.", "m": true, "c": "misc"}, {"d": "k", "t": "المفاهيم الخاطئة", "q": "الترتيب الصحيح لخطوات التغيير المفاهيمي:", "o": ["كشف التصور، إحداث تعارض، تقديم المفهوم العلمي، تطبيقه في مواقف جديدة", "تقديم المفهوم العلمي، كشف التصور، إحداث تعارض، تطبيقه", "كشف التصور، تقديم المفهوم العلمي، تطبيقه، إحداث تعارض", "إحداث تعارض، كشف التصور، تطبيقه، تقديم المفهوم العلمي"], "a": 0, "e": "لا يتخلى الطالب عن تصوره إلا إذا كُشف أولاً ثم ثبت عجزه أمام الدليل.", "m": false, "c": "misc"}, {"d": "k", "t": "القياس والتقويم", "q": "التطبيق المنهجي للطريقة العلمية في حل المشكلات هو:", "o": ["البحث العلمي", "التقويم", "القياس", "الاختبار"], "a": 0, "e": "البحث العلمي منهجية منظمة لحل المشكلات. التقويم حكم، والقياس تقدير كمي، والاختبار أداة.", "m": false, "c": "terms"}, {"d": "p", "t": "القياس والتقويم", "q": "جمع معلم علامات طلبته في وحدة الكسور وحللها، ثم حكم على مستوى تعلمهم وقرر تعديل خطته. ما قام به هو:", "o": ["التقويم", "القياس", "الاختبار", "التشخيص"], "a": 0, "e": "التقويم أشمل من القياس؛ يجمع البيانات ويحللها ويصدر حكماً ويتخذ قراراً.", "m": true, "c": "terms"}, {"d": "p", "t": "القياس والتقويم", "q": "صمم معلم لغة إنجليزية اختباراً لقياس مهارة المحادثة، فوجد أن أسئلته تقيس حفظ المفردات فقط. الخاصية التي يفتقر إليها الاختبار:", "o": ["الصدق", "الثبات", "الموضوعية", "التمييز"], "a": 0, "e": "الصدق: أن يقيس الاختبار ما وُضع لقياسه.", "m": true, "c": "quality"}, {"d": "p", "t": "القياس والتقويم", "q": "اختلفت درجة الطالب نفسه في سؤال مقالي باختلاف المعلم المصحح. هذا يدل على ضعف:", "o": ["الموضوعية", "الثبات", "الصدق", "معامل الصعوبة"], "a": 0, "e": "الموضوعية: ألا تتأثر الدرجة بالمصحح. الثبات: اتساق النتائج عند إعادة التطبيق.", "m": true, "c": "quality"}, {"d": "p", "t": "القياس والتقويم", "q": "أردت تقويم مهارة طلبتك في الإلقاء أمام الصف. الأداة الأنسب:", "o": ["سلم تقدير بمعايير محددة أثناء الأداء", "تقرير مكتوب يصف فيه الطالب ما سيقوله", "تقييم انطباعي عام بعد انتهاء العرض", "سؤال مقالي عن مهارات الإلقاء"], "a": 0, "e": "المهارة الأدائية (إلقاء، تلاوة، تجربة عملية، مهارة رياضية، رسم) تُقوَّم بالملاحظة أثناء الأداء وفق معايير، لا بالانطباع ولا بالكتابة عنها.", "m": true, "c": "tools"}, {"d": "p", "t": "القياس والتقويم", "q": "في منتصف الدرس، طلبت من كل طالب كتابة ما فهمه وما لم يفهمه على بطاقة. هذا:", "o": ["تقويم تكويني يوجه تعديل التدريس", "تقويم تشخيصي يحدد المتطلبات السابقة", "تقويم ذاتي يقيس رضا الطلبة", "تقويم ختامي قصير للدرس"], "a": 0, "e": "التقويم أثناء التعلم بهدف تحسينه تكويني.", "m": true, "c": "types"}, {"d": "p", "t": "القياس والتقويم", "q": "صممت سلم تقدير لتقرير المشروع. ما يحقق العدالة في التقييم:", "o": ["إعلان المعايير ومستوياتها للطلبة قبل التنفيذ", "تطبيقه من قبل أكثر من مصحح", "ربط كل معيار بدرجة محددة", "تجريبه على عينة من الأعمال قبل اعتماده"], "a": 0, "e": "العدالة: تحري الموضوعية، وحق المتعلم في معرفة محكات التقييم مسبقاً.", "m": true, "c": "tools"}, {"d": "p", "t": "القياس والتقويم", "q": "أفضل عبارة يمكن أن يتضمنها السجل القصصي عن الطالب خالد:", "o": ["تدخّل دون إذن أثناء إجابة خمسة من زملائه عن أسئلة التهيئة", "كان مشاغباً طوال الحصة على غير عادته", "لم يحترم زملاءه أثناء النقاش اليوم", "يقاطع زملاءه دائماً لأنه يحب لفت الانتباه"], "a": 0, "e": "السجل القصصي يصف سلوكاً محدداً بموضوعية، دون أحكام أو تعميمات أو تفسيرات.", "m": true, "c": "tools"}, {"d": "p", "t": "القياس والتقويم", "q": "بعد اختبار تحريري وجدت أن مستوى طلبتك منخفض. يجب عليك أن:", "o": ["أعيد شرح الدرس مستخدماً أساليب تدريس أخرى", "أعيد الاختبار بعد مراجعة سريعة", "أكلفهم بواجبات علاجية في البيت", "أستدعي أولياء أمور الضعاف لمتابعتهم"], "a": 0, "e": "ضعف الصف كله تغذية راجعة للمعلم ليعدل أسلوبه.", "m": true, "c": "types"}, {"d": "p", "t": "القياس والتقويم", "q": "طبقت اختباراً تشخيصياً فوجدت طلبة ضعاف الأداء. كيف تتصرف؟", "o": ["أنفذ دروساً علاجية قبل الانتقال للمحتوى الجديد", "أنتقل للمحتوى الجديد مع مراعاة الضعاف أثناء الشرح", "أُعلم أولياء الأمور بنتائج الاختبار", "أعيد الاختبار للتأكد من النتائج"], "a": 0, "e": "هدف الاختبار التشخيصي تحديد الضعف ثم علاجه قبل البناء عليه.", "m": true, "c": "types"}, {"d": "p", "t": "الإحصاء التربوي", "q": "الشعبة (أ): الوسط 70 والانحراف المعياري 5. الشعبة (ب): الوسط 70 والانحراف المعياري 15. ماذا تستنتج؟", "o": ["الشعبتان متساويتان في التحصيل، والشعبة (أ) أكثر تجانساً", "الشعبتان متساويتان في التحصيل، والشعبة (ب) أكثر تجانساً", "الشعبة (أ) أعلى تحصيلاً وأكثر تجانساً", "الشعبة (ب) أعلى تحصيلاً لتنوع مستوياتها"], "a": 0, "e": "الوسط يحدد التحصيل، والانحراف الأصغر يعني تجانساً أكبر.", "m": true, "c": "stats"}, {"d": "p", "t": "الإحصاء التربوي", "q": "طالب علامته 80 في شعبة وسطها 70 وانحرافها 5، وطالب علامته 85 في شعبة وسطها 70 وانحرافها 15. أيهما أفضل نسبياً؟", "o": ["الأول، لأن علامته المعيارية 2", "الثاني، لأن علامته الخام أعلى", "الثاني، لأن علامته المعيارية أعلى", "متساويان لأن الوسطين متساويان"], "a": 0, "e": "ز = (العلامة − الوسط) ÷ الانحراف. الأول (80−70)÷5 = 2، والثاني (85−70)÷15 = 1.", "m": true, "c": "stats"}, {"d": "p", "t": "الإحصاء التربوي", "q": "شعبتان: الأولى وسطها 65 وانحرافها 12، والثانية وسطها 72 وانحرافها 4. أي العبارات صحيحة؟", "o": ["الثانية أعلى تحصيلاً وأكثر تجانساً", "الثانية أعلى تحصيلاً، والأولى أكثر تجانساً", "الأولى أعلى تحصيلاً لأن انحرافها أكبر", "لا يمكن المقارنة لاختلاف الانحرافين"], "a": 0, "e": "الوسط الأعلى تحصيل أعلى، والانحراف الأصغر تجانس أكبر.", "m": true, "c": "stats"}, {"d": "p", "t": "الإحصاء التربوي", "q": "وجدت أن الانحراف المعياري لعلامات إحدى شعبك كبير جداً. الإجراء التربوي الأنسب:", "o": ["توظيف التعليم المتمايز لمراعاة الفروق الكبيرة", "خطة علاجية جماعية للصف كله", "التركيز على الطلبة دون الوسط فقط", "إعادة الاختبار للتأكد من ثباته"], "a": 0, "e": "التشتت الكبير يعني فروقاً فردية واسعة، وعلاجها التمايز. أما الخطة الجماعية فتناسب التجانس مع وسط منخفض.", "m": true, "c": "stats"}, {"d": "k", "t": "نظريات التعلم", "q": "التعريف الأدق للنظرية البنائية:", "o": ["المتعلم يبني معرفته بنشاط من تفاعل خبراته السابقة مع الخبرات الجديدة", "التعلم تغير في السلوك الملاحظ نتيجة التعزيز", "التعلم معالجة للمعلومات وتخزينها في الذاكرة", "التعلم يحدث بملاحظة نموذج وتقليده"], "a": 0, "e": "الخيارات الأخرى تعريفات للسلوكية والمعرفية والتعلم الاجتماعي على الترتيب.", "m": false, "c": "theories"}, {"d": "p", "t": "نظريات التعلم", "q": "بدأ معلم التاريخ درساً جديداً بمخطط عام يربطه بالدرس السابق قبل الدخول في التفاصيل. هذا الموقف أقرب إلى:", "o": ["النظرية المعرفية (المنظم المتقدم لأوزوبل)", "النظرية السلوكية", "البنائية الاجتماعية لفيجوتسكي", "التعلم الاجتماعي لباندورا"], "a": 0, "e": "تقديم إطار عام يربط الجديد بالسابق قبل التفاصيل هو المنظم المتقدم.", "m": true, "c": "theories"}, {"d": "p", "t": "نظريات التعلم", "q": "قسّم معلم مهارة القسمة الطويلة إلى خطوات صغيرة، ولا ينتقل للخطوة التالية حتى يتقن الطالب السابقة مع تعزيز فوري. هذا تطبيق لـ:", "o": ["النظرية السلوكية (التعلم المبرمج لسكنر)", "البنائية (السقالات التعليمية)", "المعرفية (معالجة المعلومات)", "التعلم بالاكتشاف لبرونر"], "a": 0, "e": "تجزئة المهمة مع التعزيز الفوري لكل خطوة من مبادئ سكنر.", "m": true, "c": "theories"}, {"d": "p", "t": "نظريات التعلم", "q": "طالب لا يستطيع حل مسألة كلامية في الرياضيات وحده، لكنه يحلها بمساعدة زميله. هذه المهمة تقع ضمن:", "o": ["منطقة النمو القريب", "السقالات التعليمية", "التعلم التعاوني", "التعزيز البديل"], "a": 0, "e": "منطقة النمو القريب: الفرق بين ما يؤديه الطالب وحده وما يؤديه بمساعدة. والسقالات هي الدعم المقدم داخلها.", "m": true, "c": "vyg"}, {"d": "p", "t": "نظريات التعلم", "q": "معلم يكتب فقرة نموذجية أمام الطلبة مفكراً بصوت عالٍ، ثم يعطيهم فقرة ناقصة يكملونها، ثم يطلب منهم كتابة فقرة كاملة وحدهم. الخطوة الأخيرة تمثل:", "o": ["السحب التدريجي للدعم", "النمذجة", "الممارسة الموجهة", "التقويم الختامي"], "a": 0, "e": "مكونات السقالات: النمذجة، ثم الدعم (الممارسة الموجهة)، ثم السحب التدريجي للوصول للاستقلال.", "m": true, "c": "vyg"}, {"d": "p", "t": "نظريات التعلم", "q": "تدرّس طلبة في التاسعة من العمر مفهوم الكسور باستخدام قطع ورقية مقسمة. وفق بياجيه، هؤلاء الطلبة في مرحلة:", "o": ["العمليات المادية (المحسوسة)", "ما قبل العمليات", "العمليات المجردة", "الحسية الحركية"], "a": 0, "e": "مرحلة العمليات المادية (7–11 سنة): تفكير منطقي بشرط وجود المحسوس.", "m": true, "c": "piaget"}, {"d": "p", "t": "نظريات التعلم", "q": "توقع طلبتك أن الجسم الأثقل يسقط دائماً أسرع، فأسقطت أمامهم كرتين مختلفتي الوزن فوصلتا معاً، فشعروا بالحيرة. هذه الحيرة تمثل عند بياجيه:", "o": ["اختلال التوازن الذي يدفع إلى المواءمة", "التمثّل الذي يدمج الخبرة الجديدة", "التوازن بين التمثل والمواءمة", "الاحتفاظ"], "a": 0, "e": "التعارض بين الخبرة والتوقع يخل بالتوازن، فيعدّل الطالب بنيته المعرفية (مواءمة).", "m": true, "c": "piaget"}, {"d": "p", "t": "نظريات التعلم", "q": "تدريس الكسور بقطع محسوسة، ثم برسومات، ثم بالرموز الرقمية، يطبّق:", "o": ["أنماط التمثيل عند برونر", "المنهج الحلزوني عند برونر", "التعلم بالاكتشاف عند برونر", "مراحل النمو المعرفي عند بياجيه"], "a": 0, "e": "التمثيل عند برونر: عملي، ثم أيقوني (صور)، ثم رمزي (لغة ورموز).", "m": true, "c": "bruner"}, {"d": "p", "t": "نظريات التعلم", "q": "طالب يقول: «لن أغش لأني قد أُضبط وأعاقب». وفق كولبرج هو في مرحلة:", "o": ["تجنب العقاب والطاعة", "المنفعة الشخصية والتبادل", "الولد الطيب (إرضاء الآخرين)", "القانون والنظام"], "a": 0, "e": "الدافع هو الخوف من العقاب، وهي المرحلة الأولى من المستوى ما قبل العُرفي.", "m": true, "c": "kohl"}, {"d": "p", "t": "نظريات التعلم", "q": "يحرص المعلم على الإصغاء لطلبته واحترام آرائهم المختلفة، فأصبح الطلبة يتعاملون مع بعضهم بالطريقة نفسها في النقاش. هذا تطبيق لـ:", "o": ["النمذجة (التعلم بالملاحظة) عند باندورا", "التعزيز البديل عند باندورا", "الاشتراط الإجرائي عند سكنر", "قانون التدريب عند ثورندايك"], "a": 0, "e": "الطلبة يتعلمون بملاحظة النموذج وتقليده. التعزيز البديل يتطلب رؤية الآخرين يُكافأون.", "m": true, "c": "bandura"}, {"d": "p", "t": "نظريات التعلم", "q": "إعفاء الطالب من واجب إضافي عند إتقانه المهمة الصفية هو:", "o": ["تعزيز سالب", "تعزيز موجب", "عقاب سالب", "إطفاء"], "a": 0, "e": "التعزيز السالب: إزالة مثير مزعج لزيادة السلوك المرغوب. وليس عقاباً.", "m": true, "c": "reinf"}, {"d": "k", "t": "نظريات التعلم", "q": "خصم المعلم علامة من الطالب الذي لم يؤدِّ واجبه. هذا يسمى:", "o": ["عقاباً سالباً", "تعزيزاً سالباً", "عقاباً موجباً", "إطفاءً"], "a": 0, "e": "إزالة شيء محبب لتقليل السلوك عقاب سالب. لا تخلط بينه وبين التعزيز السالب الذي يزيد السلوك.", "m": false, "c": "reinf"}, {"d": "p", "t": "الفروق الفردية والتمايز", "q": "قدّم معلم في درس الإعراب تدريبات علاجية لفئة، وتدريبات أساسية لفئة، وتحديات إثرائية لفئة ثالثة، حسب مستوياتهم. هذا تطبيق لـ:", "o": ["التعليم المتمايز", "التعليم المدمج", "التعلم الإتقاني", "التعليم المفرد"], "a": 0, "e": "التمايز يكيّف المهام حسب استعداد الطلبة داخل الصف نفسه.", "m": true, "c": "diff"}, {"d": "p", "t": "الفروق الفردية والتمايز", "q": "سمح المعلم لطلبته بتقديم ما تعلموه عن قضية المياه بصيغ مختلفة: مطوية، أو فيديو، أو مجسم. هذا تمايز في:", "o": ["الناتج", "المحتوى", "العمليات", "بيئة التعلم"], "a": 0, "e": "التمايز في الناتج: تنويع طرق إظهار التعلم.", "m": true, "c": "diff"}, {"d": "p", "t": "الفروق الفردية والتمايز", "q": "يشرح معلم الدرس وجاهياً في الصف، ثم يكلّف الطلبة بأنشطة وفيديوهات على منصة إلكترونية في البيت. هذا النمط هو:", "o": ["التعليم المدمج", "التعلم المتزامن", "الصف المقلوب", "التعلم عن بعد"], "a": 0, "e": "المدمج يجمع الوجاهي والإلكتروني. في الصف المقلوب يأتي المحتوى أولاً في البيت ثم التطبيق في الصف.", "m": true, "c": "modes"}, {"d": "p", "t": "الفروق الفردية والتمايز", "q": "ما العلاقة بين الذكاءات المتعددة وصعوبات التعلم؟", "o": ["تُوظَّف الذكاءات القوية لدى الطالب لتعويض جوانب الضعف", "طالب صعوبات التعلم ضعيف في الذكاءين اللغوي والمنطقي دائماً", "الذكاءات المتعددة أداة لتشخيص صعوبات التعلم", "لا علاقة بينهما لأن صعوبات التعلم ترتبط بالقدرة العقلية العامة"], "a": 0, "e": "طالب صعوبات التعلم ذكاؤه عادي أو فوق العادي، والذكاءات المتعددة تكشف نقاط قوته للبناء عليها.", "m": true, "c": "mi"}, {"d": "p", "t": "الفروق الفردية والتمايز", "q": "طالب ضعيف في القراءة لكنه بارع في الرسم والتركيب. لتدريسه درساً في التاريخ:", "o": ["أوظف قوته البصرية والحركية بخط زمني مصوّر ونموذج، مع دعم قرائي", "أكثف له تمارين قراءة علاجية قبل الدرس", "أقدم له المحتوى مسموعاً بدل المقروء", "أكلفه بتلخيص الدرس برسومات فقط"], "a": 0, "e": "البناء على نقاط القوة مع استمرار دعم الضعف، لا التخلي عن أحدهما.", "m": true, "c": "mi"}, {"d": "p", "t": "الفروق الفردية والتمايز", "q": "طالب موهوب في الرياضيات ينهي المهام قبل الجميع ويشعر بالملل. الأنسب داخل الصف:", "o": ["إثراء بمشروع بحثي مرتبط بالمحتوى", "تقديم دروس الوحدة التالية له", "تكليفه بمساعدة زملائه في مهامهم", "تمارين إضافية بمستوى صعوبة أعلى"], "a": 0, "e": "الإثراء يعمّق التعلم ويتحدى التفكير، بينما التمارين الإضافية تزيد الكم فقط.", "m": true, "c": "diff"}, {"d": "p", "t": "الفروق الفردية والتمايز", "q": "لمراعاة أنماط التعلم المختلفة في درس عن تضاريس الأردن، الأنسب:", "o": ["التنويع بين خريطة ملونة، ونقاش شفوي، ومجسم يبنيه الطلبة", "التركيز على النمط البصري لأنه الأكثر انتشاراً", "تقسيم الطلبة حسب أنماطهم وتدريس كل فئة وحدها", "إعطاء كل طالب نشاطاً يناسب نمطه فقط"], "a": 0, "e": "التنويع يصل إلى البصري والسمعي والحركي معاً، ويطور الأنماط الأخرى لدى كل طالب.", "m": true, "c": "mi"}, {"d": "p", "t": "الرقمنة والتعلم الإلكتروني", "q": "أي استخدام للتقنية يمثل أعلى مستويات دمجها في التدريس (نموذج SAMR)؟", "o": ["إنتاج الطلبة مشروعاً رقمياً مشتركاً مع مدرسة أخرى ونشره لجمهور حقيقي", "عرض فيديو للدرس مع أسئلة تفاعلية", "اختبار إلكتروني بتصحيح فوري", "نشر ملخص الدرس على منصة الصف"], "a": 0, "e": "إعادة التعريف أعلى مستوى، وفيها تمكّن التقنية من مهمة لم تكن ممكنة من دونها.", "m": true, "c": "samr"}, {"d": "k", "t": "الرقمنة والتعلم الإلكتروني", "q": "النشاط الذي يبحث فيه الطالب في الإنترنت بطريقة منظمة وموجهة للوصول إلى المعلومات بأقل جهد:", "o": ["الرحلات المعرفية (WebQuest)", "التعلم الذاتي الإلكتروني", "البحث الحر في المصادر", "الاستقصاء الموجه"], "a": 0, "e": "الرحلة المعرفية توجه الطالب لمصادر محددة ضمن مهمة واضحة.", "m": false, "c": "samr"}, {"d": "p", "t": "الرقمنة والتعلم الإلكتروني", "q": "بعض طلبتك لا يملكون أجهزة في البيت، وتريد دمج التعلم الرقمي. الأنسب:", "o": ["أوفر بدائل داخل المدرسة، كمختبر الحاسوب والعمل في مجموعات، لضمان العدالة", "أؤجل الأنشطة الرقمية حتى تتوفر الأجهزة للجميع", "أقدم لهم نسخاً ورقية بدل الأنشطة الرقمية", "أكلف من يملك جهازاً بالمهمة، ويشارك النتائج مع زملائه"], "a": 0, "e": "الرقمنة يجب أن تحقق العدالة في الوصول لا أن تزيد الفجوة.", "m": true, "c": "samr"}, {"d": "p", "t": "الرقمنة والتعلم الإلكتروني", "q": "سلّم طالب تقريراً منسوخاً من الإنترنت حرفياً. الإجراء الأنسب:", "o": ["أحاوره حول الأمانة العلمية، وأدربه على التوثيق وإعادة الصياغة، ثم يعيد التقرير", "أطلب منه إعادة كتابته بأسلوبه دون نقاش", "أقبله هذه المرة وأنبهه في المرة القادمة", "أخصم نصف العلامة وأوضح له السبب"], "a": 0, "e": "الموقف فرصة تعلم؛ الأمانة العلمية مهارة تُعلَّم بالحوار والتدريب.", "m": true, "c": "ethics"}, {"d": "p", "t": "الرقمنة والتعلم الإلكتروني", "q": "عند تخطيطك لمشروع توأمة إلكترونية (eTwinning) مع مدرسة أخرى، أول خطوة:", "o": ["الاتفاق مع المعلم الشريك على هدف مشترك وموضوع مرتبط بالمنهاج وخطة زمنية", "تسجيل الطلبة المشاركين على المنصة", "اختيار مدرسة شريكة ذات تجربة قوية", "تحديد أداة التواصل بين الطلبة"], "a": 0, "e": "نجاح التوأمة يبدأ بتخطيط مشترك مرتبط بنتاجات التعلم.", "m": true, "c": "etw"}, {"d": "p", "t": "الرقمنة والتعلم الإلكتروني", "q": "يستخدم طلبتك أدوات الذكاء الاصطناعي في الواجبات. الموقف الأنسب:", "o": ["أوجههم لاستخدامها بضوابط، وأصمم مهام تتطلب تفكيراً وتطبيقاً شخصياً", "أمنعها وأجعل الواجبات كتابية داخل الصف", "أسمح بها بشرط ذكر الأداة المستخدمة", "أستخدم أدوات كشف المحتوى المولّد وأحاسب المخالفين"], "a": 0, "e": "التوظيف الواعي بضوابط مع مهام أصيلة يقيس تفكير الطالب نفسه.", "m": true, "c": "ethics"}, {"d": "p", "t": "الشراكة مع الأهل والمجتمع", "q": "تريد إشراك أولياء الأمور في تعلم أبنائهم في مهارة القراءة. الأنسب:", "o": ["نشاط منزلي يقرأ فيه الأهل مع أبنائهم قصة ويناقشونها", "محاضرة للأهل عن أهمية القراءة", "إرسال نشرة بأهداف الوحدة", "دعوتهم لحضور حصة قراءة"], "a": 0, "e": "الشراكة الفاعلة تجعل الأهل شركاء في التعلم نفسه، لا متلقين للمعلومات.", "m": true, "c": "partner"}, {"d": "p", "t": "الشراكة مع الأهل والمجتمع", "q": "حضر ولي أمر غاضب يعترض على علامة ابنه. التصرف الأنسب:", "o": ["أستقبله بهدوء، وأستمع إليه، وأعرض عليه أوراق ابنه ومعايير التصحيح", "أحيله إلى المدير لأنه الجهة المخولة", "أوضح له أن العلامة نهائية وفق التعليمات", "أحدد له موعداً لاحقاً بعد أن يهدأ"], "a": 0, "e": "الإصغاء والشفافية والمعايير المعلنة تبني الثقة مع الأسرة.", "m": true, "c": "partner"}, {"d": "p", "t": "الشراكة مع الأهل والمجتمع", "q": "بعض أولياء الأمور لا يحضرون اجتماعات المدرسة. الأنسب:", "o": ["تنويع قنوات التواصل وأوقاته: رسائل، ومكالمات، ولقاءات مسائية", "إرسال دعوات رسمية متكررة لهم", "التواصل معهم عند حدوث مشكلات فقط", "تكليف الطلبة بإحضار أهاليهم إلى الاجتماع"], "a": 0, "e": "المبادرة بقنوات مرنة تراعي ظروف الأسر.", "m": true, "c": "partner"}, {"d": "p", "t": "الشراكة مع الأهل والمجتمع", "q": "في صفك طالب يحتاج دعماً مادياً واضحاً. الأنسب:", "o": ["أنسق بسرية مع المرشد والإدارة لتقديم الدعم دون إحراجه", "أنظم حملة تبرعات في الصف دون ذكر اسمه", "أتواصل مع أهله مباشرة لعرض المساعدة", "أساعده شخصياً دون إخبار أحد"], "a": 0, "e": "السرية وحفظ الكرامة والعمل المؤسسي عبر المرشد أساس أي دعم.", "m": true, "c": "service"}, {"d": "p", "t": "الشراكة مع الأهل والمجتمع", "q": "نظّم طلبتك حملة تطوعية لتنظيف حديقة الحي. لتحقيق أثر تعلمي أعمق:", "o": ["أربط الحملة بمفاهيم النظام البيئي، وأطلب منهم تأمل ما تعلموه وتقديم توصيات", "أنشر صور الحملة على صفحة المدرسة", "أكرر الحملة شهرياً", "أكافئ أكثر الطلبة مشاركة"], "a": 0, "e": "التعلم بالخدمة يجمع الخدمة والربط بالمنهاج والتأمل.", "m": true, "c": "service"}, {"d": "k", "t": "الشراكة مع الأهل والمجتمع", "q": "الشراكة بين المدرسة وأولياء الأمور تحقق الآتي عدا:", "o": ["تأمين جميع الموارد المادية للمدرسة", "متابعة تعلم الأبناء", "دعم الطلبة نفسياً", "تعزيز التواصل بين البيت والمدرسة"], "a": 0, "e": "هدف الشراكة تربوي ونفسي، لا تمويل المدرسة.", "m": false, "c": "partner"}, {"d": "p", "t": "الشراكة مع الأهل والمجتمع", "q": "لتوعية الطلبة بقضية الفقر، أي الخيارات أكثر أثراً؟", "o": ["إذاعة مدرسية تتبعها حملة تطوعية يخطط لها الطلبة وينفذونها مع حفظ كرامة المستفيدين", "إذاعة مدرسية عن الفقر وأسبابه", "حملة تبرعات تديرها إدارة المدرسة", "مسابقة كتابة مقال عن الفقر"], "a": 0, "e": "الانتقال من المعرفة إلى السلوك (التعلم بالخدمة)، مع حفظ الكرامة.", "m": true, "c": "service"}, {"d": "p", "t": "البحث الإجرائي", "q": "لاحظت تدني مستوى طلبتك في التعبير الكتابي، وقررت إجراء بحث إجرائي. الخطوة الأولى:", "o": ["تحديد المشكلة بدقة وجمع بيانات لتشخيص أسبابها", "مراجعة الدراسات التربوية حول المشكلة", "اختيار استراتيجية علاجية مناسبة", "صياغة فرضيات البحث"], "a": 0, "e": "خطوات البحث الإجرائي: تحديد المشكلة، ثم جمع البيانات، ثم خطة إجرائية، ثم التنفيذ، ثم التقويم والتأمل.", "m": true, "c": "ar"}, {"d": "p", "t": "البحث الإجرائي", "q": "عند إجراء بحث إجرائي حول التفاعل داخل المجموعات التعاونية، أفضل أداة لجمع المعلومات:", "o": ["الملاحظة المباشرة لسلوك الطلبة داخل المجموعات وتسجيل البيانات", "استبانة لآراء الطلبة في العمل التعاوني", "مقابلات فردية مع الطلبة", "اختبار تحصيلي بعد النشاط"], "a": 0, "e": "التفاعل سلوك يُرصد مباشرة، والملاحظة تعطي بيانات واقعية من الميدان.", "m": true, "c": "ar"}, {"d": "k", "t": "البحث الإجرائي", "q": "الهدف الأساسي من البحث الإجرائي، وعلى من تعود فائدته:", "o": ["حل مشكلة واقعية في الصف، وتعود فائدته على المعلم وطلبته", "تعميم النتائج على المدارس المشابهة", "اختبار نظرية تربوية جديدة", "إنتاج معرفة تُنشر في المجلات المحكمة"], "a": 0, "e": "البحث الإجرائي: المعلم باحث في صفه، ونتائجه محلية تطبيقية.", "m": false, "c": "ar"}, {"d": "a", "t": "التنمية المهنية والاتجاهات", "q": "اختلفت مع مدير المدرسة حول تقييمك، وشعرت أنه غير عادل. أي الممارسات تتبع أولاً؟", "o": ["أتأمل ممارساتي وأحللها وأتقبل النقد من أجل التحسين", "أطلب لقاء المدير لمناقشة الأدلة", "أقدم اعتراضاً رسمياً على التقييم", "أطلب تقييماً من المشرف التربوي"], "a": 0, "e": "التأمل الذاتي أرقى صور النمو المهني، ويسبق أي اعتراض.", "m": true, "c": "reflect"}, {"d": "a", "t": "التنمية المهنية والاتجاهات", "q": "انتهيت من حصة لم تحقق أهدافها كما خططت. أول ما تقوم به:", "o": ["أتأمل الحصة وأحلل أسباب الخلل وأعدّل خطتي", "أطلب من زميل حضور حصتي القادمة", "أعيد شرح الدرس بالطريقة نفسها", "أكمل الخطة وأعوض النقص لاحقاً"], "a": 0, "e": "التأمل: وصف، ثم تحليل، ثم إجراء لاحق.", "m": true, "c": "reflect"}, {"d": "a", "t": "التنمية المهنية والاتجاهات", "q": "شعرت بالملل والفتور لدى طلبتك. كيف تواجه المشكلة؟", "o": ["أضع خطة للنمو المهني أجدد بها استراتيجيات التدريس والتقييم", "أزيد الأنشطة الترفيهية في الحصص", "أتواصل مع الأهل لمتابعة أبنائهم", "أطبق نظام حوافز ومكافآت"], "a": 0, "e": "تطوير المعلم لنفسه ينعكس مباشرة على دافعية الطلبة، وهو حل مستدام.", "m": true, "c": "reflect"}, {"d": "a", "t": "التنمية المهنية والاتجاهات", "q": "لاحظت أن زملاءك يترددون في استخدام منصات التعلم التفاعلية. بصفتك قائداً للتغيير، أول ما تقوم به:", "o": ["أنفذ حصة تطبيقية يحضرها زملائي وأشاركهم تجربتي ونتائجها", "أقترح على الإدارة تنظيم ورشة تدريبية", "أشارك زملائي روابط المنصات ودليل استخدامها", "أطبقها في صفي وأنتظر أن يلاحظوا النتائج"], "a": 0, "e": "قيادة التغيير بالقدوة ونشر الممارسة والأدلة.", "m": true, "c": "lead"}, {"d": "a", "t": "التنمية المهنية والاتجاهات", "q": "أي مما يأتي إنجاز يُوثّق في ملف الجائزة؟", "o": ["مبادرة طبقتها وقست أثرها بأدلة وتبناها زملاء آخرون", "حضور عدد كبير من الدورات التدريبية", "حصول طلبتي على علامات مرتفعة", "المشاركة في لجان مدرسية متعددة"], "a": 0, "e": "الإنجاز يتجاوز الواجب، وله أثر موثق، وينتشر إلى الآخرين.", "m": true, "c": "lead"}, {"d": "a", "t": "التنمية المهنية والاتجاهات", "q": "وُضعت في جدولك شعبة توصف بأنها «ضعيفة». اتجاهك:", "o": ["أتعامل معها بتوقعات مرتفعة وخطة دعم، لأن كل طالب قادر على التعلم", "أبسط المحتوى ليناسب مستواهم", "أركز على أساسيات المنهاج فقط", "أكثف لهم الحصص الإضافية"], "a": 0, "e": "التوقعات المرتفعة والإيمان بقدرة الطلبة من اتجاهات المعلم المتميز.", "m": true, "c": "att"}, {"d": "k", "t": "التنمية المهنية والاتجاهات", "q": "تُعنى التنمية المهنية للمعلمين بـ:", "o": ["التجديد والابتكار وتحسين الممارسات باستمرار", "حضور برامج التدريب", "تحقيق متطلبات الترقية", "مواكبة تعليمات الوزارة"], "a": 0, "e": "التنمية المهنية أشمل من التدريب، وغايتها التحسين المستمر.", "m": false, "c": "reflect"}, {"d": "a", "t": "التنمية المهنية والاتجاهات", "q": "العبارة الأنسب لرؤيتك التربوية في ملف الجائزة:", "o": ["متعلم مفكر مبدع، منتمٍ لوطنه، يوظّف العلم في حياته", "تحسين نتائج الطلبة في الاختبارات الوطنية", "توظيف التكنولوجيا في جميع الحصص", "بيئة صفية آمنة ومنظمة"], "a": 0, "e": "الرؤية صورة مستقبلية بعيدة ملهمة للمتعلم. البقية أهداف أو وسائل.", "m": true, "c": "lead"}, {"d": "a", "t": "التنمية المهنية والاتجاهات", "q": "يرتبط تعزيز القيم لدى الطلبة بأن يتحلى بها المعلم أولاً ليكون:", "o": ["القدوة", "الموجّه", "الميسّر", "المرشد"], "a": 0, "e": "القيم تُكتسب بالملاحظة والنمذجة أكثر من التوجيه.", "m": true, "c": "att"}];
+const CARDS = {"diag": {"t": "التشخيص قبل العلاج", "h": "<p>أي مشكلة صفية (عدم تفاعل، تأخر، تراجع مفاجئ، مشاجرة) لها <b>سبب</b> قد يكون أكاديمياً أو نفسياً أو أسرياً أو صحياً. المعلم المتميز يبحث عن السبب قبل أن يختار الإجراء.</p>\n<ul>\n<li><b>خطوات التعامل:</b> ملاحظة السلوك وتوثيقه، ثم حوار فردي هادئ، ثم جمع معلومات (المرشد، السجل، الأهل)، ثم خطة علاجية، ثم متابعة.</li>\n<li><b>التشخيص التربوي</b> يحدد مواطن الضعف ونوعها: هل هو ضعف في متطلب سابق؟ صعوبة تعلم؟ مشكلة دافعية؟</li>\n<li><b>المقابلة الفردية الناجحة</b> تبدأ بالطمأنة وتوضيح الهدف، وفيها إصغاء وإعادة صياغة لكلام الطالب، وتنتهي بالتقبل. وتتجنب المواجهة بالأخطاء في بدايتها.</li>\n<li><b>التغير المفاجئ</b> (عزلة، تراجع حاد) مؤشر نفسي يُحال إلى المرشد بسرية.</li>\n</ul>\n<p class=\"ex\"><b>مثال:</b> طالب لا يحل مسائل الكسور. قد يكون السبب ضعفاً في جدول الضرب (متطلب سابق)، فالعلاج مراجعة المتطلب لا زيادة المسائل. وكذلك طالب لا يُعرب الجملة قد يكون ضعيفاً في تمييز الفعل والاسم.</p>\n<p class=\"tip\"><b>في الامتحان:</b> الخيارات مثل «المقعد الأمامي» و«الاتصال بالأهل» و«مهام بسيطة» صحيحة جزئياً، لكنها تأتي <b>بعد</b> التشخيص. إذا وجدت «معرفة الأسباب» أو «التشخيص» فهي غالباً الإجابة.</p>"}, "rules": {"t": "القواعد الصفية والإدارة الذاتية", "h": "<p>الإدارة الصفية الحديثة <b>وقائية</b> قبل أن تكون علاجية، وغايتها أن يضبط الطالب سلوكه بنفسه.</p>\n<ul>\n<li><b>القواعد الفاعلة:</b> قليلة (4–6)، بصيغة إيجابية («نرفع أيدينا» بدل «لا تتكلم»)، يشارك الطلبة في وضعها، وتُطبق بعدالة وثبات.</li>\n<li><b>الإعداد أم التطبيق؟</b> التطبيق والمتابعة أكثر تأثيراً من الإعداد والتعليق على الجدار.</li>\n<li><b>الإدارة الذاتية</b> تُبنى بالثقة والمسؤولية المشتركة وتوزيع أدوار حقيقية في إدارة الصف، لا بالمراقبة والحوافز الخارجية.</li>\n<li><b>المناخ الصفي:</b> العدالة في توزيع الانتباه، واحترام الطلبة، وقدر من الحرية في الحركة والرأي تحت إشراف المعلم.</li>\n</ul>\n<p class=\"tip\"><b>في الامتحان:</b> اختر «بمشاركة الطلبة» و«المتابعة والتطبيق» على «إعداد قائمة» أو «تحديد عقوبات».</p>"}, "code": {"t": "مدونة السلوك والتدرج في الإجراءات", "h": "<p>مدونة السلوك الطلابي تنظم التعامل مع المخالفات بهدف <b>الإصلاح لا العقاب</b>، مع حفظ كرامة الطالب ومنع العقاب البدني والإهانة.</p>\n<ul>\n<li><b>التدرج:</b> تنبيه غير لفظي، ثم تنبيه فردي، ثم حوار بعد الحصة، ثم إحالة للمرشد، ثم إشراك ولي الأمر، ثم الإدارة.</li>\n<li><b>التوثيق:</b> كل موقف متكرر يُسجل بوصف موضوعي.</li>\n<li><b>التنمّر:</b> أوقف السلوك فوراً، اطمئن على المتضرر، حاور المتنمر، وثّق، نسّق مع المرشد. لا اعتذار علني يحرج، ولا تجاهل.</li>\n<li><b>التدخل غير اللفظي</b> (الاقتراب، النظرة، الإشارة) يعالج المخالفات البسيطة دون إيقاف الدرس.</li>\n<li><b>الإخراج من الحصة</b> يحرم الطالب من حق التعلم، فلا يُختار عادة.</li>\n</ul>\n<p class=\"tip\"><b>في الامتحان:</b> ابحث عن الخيار الذي يجمع: حماية، وحوار، وتوثيق، وشراكة مع المرشد.</p>"}, "vary": {"t": "التنويع والتهيئة وتقريب المفاهيم", "h": "<p>الطالب المتلقي يملّ؛ والسبب الجذري لعدم الاهتمام غالباً <b>تمركز التعليم حول المعلم</b>.</p>\n<ul>\n<li><b>التنويع في الاستراتيجيات</b> يراعي أنماط التعلم ويعيد الدافعية للصف كله: نقاش، نموذج، عمل جماعي، لعبة، فيديو قصير.</li>\n<li><b>التهيئة:</b> أفضلها ما ينشّط الخبرات السابقة ويربط الجديد بها، ويثير التساؤل.</li>\n<li><b>تقريب المجرد:</b> التشبيه بشيء مألوف من حياة الطلبة.</li>\n<li><b>الاستراتيجية الجيدة</b> تجعل الطالب يتعلم من مصادر متنوعة بنفسه، لا مجرد إنهاء الشرح أو ضبط الهدوء.</li>\n</ul>\n<p class=\"ex\"><b>أمثلة:</b> الكسر «قطعة من فطيرة» في الرياضيات، والفاعل «من قام بالعمل» في النحو، والدستور «قواعد اللعبة» في التربية الوطنية، والخلية «مصنع» في العلوم.</p>\n<p class=\"tip\"><b>في الامتحان:</b> حين يكون الخلل عند الصف كله، فالحل في طريقة التدريس لا في أفراد الطلبة.</p>"}, "inquiry": {"t": "الاستقصاء", "h": "<p>استراتيجية يتعلم فيها الطالب كما يعمل العالِم: <b>يسأل، يفترض، يجرّب، يستنتج</b>. تكسبه معلومات ومهارات وقيماً معاً.</p>\n<ul>\n<li><b>خطواته:</b> مشكلة أو سؤال، ثم فرضيات، ثم تصميم تجربة وضبط المتغيرات (مستقل، تابع، ثابت)، ثم جمع البيانات، ثم الاستنتاج والتعميم.</li>\n<li><b>أنواعه:</b> موجّه (المعلم يحدد السؤال والإجراءات)، وشبه موجّه، وحر (الطالب يختار السؤال).</li>\n<li><b>دور المعلم:</b> يطرح المشكلة ويوجه دون أن يعطي الإجابة.</li>\n</ul>\n<p class=\"ex\"><b>أمثلة:</b> في الاجتماعيات: «لماذا تعاني الأردن من شح المياه؟» يفترض الطلبة أسباباً ويجمعون بيانات وخرائط لاختبارها. في العلوم: «كيف تؤثر الحرارة في ذوبان السكر؟» يصممون تجربة. في الرياضيات: «ما العلاقة بين محيط الدائرة وقطرها؟» يقيسون ويستنتجون.</p>\n<p class=\"tip\"><b>في الامتحان:</b> الإجابة الصحيحة فيها «فرض الفروض» و«اختبارها» على يد الطلبة، لا تنفيذ المعلم للتجربة.</p>"}, "questions": {"t": "مهارة طرح الأسئلة الصفية", "h": "<ul>\n<li><b>الأسئلة المتقاربة (المتجمعة):</b> لها إجابة واحدة صحيحة. تقيس التذكر والفهم.</li>\n<li><b>الأسئلة المتشعبة (التباعدية):</b> تقبل إجابات متعددة. تنمي التفكير الإبداعي وتجمع أكبر عدد من الآراء.</li>\n<li><b>الأسئلة السابرة:</b> تتبع إجابة الطالب لتعميقها أو لتقوده لاكتشاف خطئه بنفسه.</li>\n<li><b>وقت الانتظار:</b> 3–5 ثوانٍ على الأقل، ويطول حسب مستوى السؤال والوقت الذي يحتاجه لمعالجة المعلومات.</li>\n<li><b>إذا لم يجب أحد:</b> أعد صياغة السؤال، وامنح وقتاً، واستخدم فكّر–زاوج–شارك.</li>\n<li><b>الإجابة الخاطئة:</b> تُشكر المحاولة ثم سؤال سابر. لا تُرفض مباشرة ولا تُحوّل لزميل.</li>\n</ul>\n<p class=\"tip\"><b>في الامتحان:</b> «أكبر عدد من الآراء» تعني متشعبة. «يقوده لاكتشاف الخطأ» تعني سابرة.</p>"}, "brain": {"t": "العصف الذهني وتوليد الأفكار", "h": "<p>استراتيجية لتوليد أكبر عدد من الأفكار حول مشكلة، وتهتم <b>بالكم قبل النوع</b>.</p>\n<ul>\n<li><b>قواعده:</b> تأجيل النقد، والترحيب بالأفكار الغريبة، والكم يولّد الكيف، والبناء على أفكار الآخرين.</li>\n<li><b>مراحله:</b> عرض المشكلة، ثم توليد الأفكار بحرية، ثم تصنيفها وتقييمها واختيار الأنسب.</li>\n<li><b>متى أستخدمه؟</b> حين يعجز الطلبة عن إبداء آراء وبدائل، أو في بداية مشروع.</li>\n</ul>\n<p class=\"ex\"><b>أمثلة:</b> «كيف نقلل هدر الماء في مدرستنا؟» أو «اقترح نهايات مختلفة للقصة» أو «بكم طريقة يمكن تمثيل العدد 24؟».</p>\n<p class=\"tip\"><b>في الامتحان:</b> «توليد أفكار جديدة ومتنوعة» تعني التفكير الإبداعي، وأداته العصف الذهني.</p>"}, "closure": {"t": "غلق الدرس وإدارة الوقت", "h": "<p>الغلق مرحلة أساسية في الدرس، وليست ما تبقى من الوقت.</p>\n<ul>\n<li><b>وظائفه:</b> تلخيص الأفكار الرئيسة، والتحقق من الفهم، وربط الدرس بما بعده.</li>\n<li><b>أدواته:</b> بطاقة الخروج، وسؤال ختامي، وتلخيص يقوم به الطلبة، وخريطة مفاهيم سريعة.</li>\n<li><b>إدارة الوقت</b> مهارة تدريسية: توزيع الوقت على مراحل الدرس مع مراعاة الأجزاء الصعبة.</li>\n</ul>\n<p class=\"tip\"><b>في الامتحان:</b> «إكمال الشرح بسرعة» خيار مغرٍ لكنه خاطئ؛ جودة التعلم أهم من إنهاء الكم.</p>"}, "coop": {"t": "عناصر التعلم التعاوني الخمسة", "h": "<p>التعلم التعاوني بنية مقصودة يعمل فيها الطلبة في مجموعات صغيرة غير متجانسة (4–6) لتحقيق هدف مشترك، بحيث يتعلم <b>كل فرد</b> ويساعد غيره.</p>\n<ol>\n<li><b>الاعتماد المتبادل الإيجابي:</b> نجاحي مرتبط بنجاح مجموعتي. يتحقق بهدف مشترك، وموارد مقسمة، وعلامة مرتبطة بتحسن الجميع.</li>\n<li><b>المسؤولية الفردية (المحاسبة):</b> كل عضو محاسب عن تعلمه ودوره. تتحقق بالأدوار والتقويم الفردي والرؤوس المرقمة.</li>\n<li><b>التفاعل المعزز وجهاً لوجه:</b> ترتيب المقاعد للحوار وتبادل الدعم.</li>\n<li><b>المهارات الاجتماعية:</b> الإصغاء، وانتظار الدور، والنقد اللطيف. تُعلَّم بشكل مقصود.</li>\n<li><b>معالجة عمل المجموعة:</b> تأمل في نهاية النشاط: ما الذي نجح؟ وما الذي نحسّنه؟</li>\n</ol>\n<p><b>العمل الجماعي التقليدي</b> قد يجلس فيه الطلبة معاً وينجز بعضهم العمل، دون أدوار أو محاسبة. وعوامل نجاح الفريق: الهدف المشترك، والاعتماد المتبادل، والمسؤولية الفردية، لا «الاهتمام بالناتج فقط».</p>\n<p class=\"tip\"><b>في الامتحان:</b> «طالب واحد يعمل والبقية يتفرجون» أو «أخذ العلامة دون عمل»: العلاج المسؤولية الفردية. «يساعدون بعضهم لأن العلامة مشتركة»: الاعتماد المتبادل.</p>"}, "coopstr": {"t": "استراتيجيات التعلم التعاوني", "h": "<ul>\n<li><b>جيكسو (التجزئة):</b> مجموعة أصلية، ثم يذهب كل عضو إلى مجموعة خبراء لدراسة جزء، ثم يعود ليعلّمه لمجموعته. كل طالب مسؤول عن جزء لا تكتمل الصورة دونه.</li>\n<li><b>فكّر–زاوج–شارك:</b> تفكير فردي، ثم نقاش مع زميل، ثم مشاركة مع الصف.</li>\n<li><b>الرؤوس المرقمة:</b> لكل عضو رقم، وبعد النقاش يُنادى رقم عشوائي ليجيب عن المجموعة، فيستعد الجميع.</li>\n<li><b>فرق التحصيل الطلابي (STAD):</b> عرض المعلم، ثم دراسة الفريق، ثم اختبار فردي، ثم نقاط تحسّن تُجمع للفريق.</li>\n<li><b>الاستقصاء الجماعي:</b> تختار كل مجموعة موضوعاً فرعياً، تبحث فيه، ثم تعرضه.</li>\n</ul>\n<p class=\"ex\"><b>أمثلة:</b> جيكسو في عناصر القصة (الشخصيات، المكان، الحبكة، الحل)، أو في أقاليم الأردن، أو في أجهزة جسم الإنسان.</p>\n<p class=\"tip\"><b>في الامتحان:</b> «مجموعة خبراء ثم العودة للتعليم» تعني جيكسو. «فرد، ثم زوج، ثم صف» تعني فكّر–زاوج–شارك.</p>"}, "coopteach": {"t": "دور المعلم وتشكيل المجموعات", "h": "<ul>\n<li><b>قبل النشاط:</b> يحدد الهدف، ويشكّل مجموعات غير متجانسة صغيرة (4–6)، ويوزع الأدوار (قارئ، مسجّل، ميقاتي، مقرّر، مشجّع)، ويوضح المعايير.</li>\n<li><b>أثناء النشاط:</b> يتجول بين <b>جميع</b> المجموعات، يلاحظ ويسجل ويدعم ويتدخل عند الحاجة فقط.</li>\n<li><b>بعد النشاط:</b> تقويم فردي وجماعي، ومعالجة عمل المجموعة.</li>\n<li><b>الطالب المسيطر:</b> إعادة توزيع الأدوار وتعليم الإصغاء وتبادل الأدوار للمجموعة كلها.</li>\n<li><b>ثبات المجموعات أو تغييرها</b> يعود لطبيعة الموضوع والطلبة.</li>\n<li><b>المجموعة التي تنهي مبكراً:</b> مهمة إثرائية أو دعم مجموعة أخرى.</li>\n</ul>\n<p class=\"tip\"><b>في الامتحان:</b> «يتابع مجموعة محددة» أو «يجلس إلى مكتبه» خطأ. المعلم ميسّر نشط لكل المجموعات.</p>"}, "cmap": {"t": "خرائط المفاهيم: البناء والمكونات", "h": "<p>أداة صممها <b>جوزيف نوفاك</b> استناداً إلى <b>التعلم ذي المعنى لأوزوبل</b>، تُظهر العلاقات بين المفاهيم بصرياً.</p>\n<ul>\n<li><b>المفاهيم:</b> داخل أشكال، مرتبة هرمياً من الأعم في الأعلى إلى الأخص.</li>\n<li><b>كلمات الربط:</b> على الخطوط، مثل «يتكون من»، «يحتوي على»، «ينتج».</li>\n<li><b>القضية:</b> مفهوم + كلمة ربط + مفهوم = عبارة ذات معنى، مثل «الأعداد ← تشمل ← الكسور» أو «الجملة الفعلية ← تتكون من ← فعل وفاعل».</li>\n<li><b>الوصلات العرضية:</b> روابط بين فروع مختلفة، وتدل على فهم عميق.</li>\n<li><b>الأمثلة:</b> في أسفل الخريطة.</li>\n</ul>\n<p><b>الأنواع:</b> هرمية (للتصنيفات)، ومتسلسلة (للمسارات والعمليات كمراحل حدث تاريخي أو خطوات حل مسألة)، وعنكبوتية (حول مفهوم مركزي).</p>\n<p><b>الخريطة الذهنية</b> تختلف: فروع حرة من فكرة مركزية بالألوان والصور، <b>دون كلمات ربط</b>.</p>\n<p><b>التصحيح (نوفاك):</b> القضية الصحيحة 1، والمستوى الهرمي 5، والوصلة العرضية الصحيحة 10، والمثال 1.</p>\n<p class=\"tip\"><b>في الامتحان:</b> «دون كلمات ربط» تعني ذهنية. «ربط بين فرعين» تعني وصلة عرضية تدل على الفهم.</p>"}, "cmapuse": {"t": "استخدامات خرائط المفاهيم في التدريس", "h": "<ul>\n<li><b>منظم متقدم:</b> في بداية الوحدة لعرض الإطار العام وربط الجديد بالسابق.</li>\n<li><b>أداة شرح:</b> تُبنى أثناء الدرس لتوضيح العلاقات.</li>\n<li><b>تلخيص ومراجعة:</b> في نهاية الوحدة أو قبل الاختبار.</li>\n<li><b>تشخيص:</b> تكشف المفاهيم الخاطئة (رابط خاطئ يعني تصوراً خاطئاً).</li>\n<li><b>تقويم:</b> قبل الوحدة وبعدها لقياس نمو البنية المفاهيمية.</li>\n<li><b>تمايز وسقالات:</b> خريطة نصف مكتملة للضعاف، وقائمة مفاهيم للمتفوقين ليبنوا خريطتهم.</li>\n<li><b>تعلم تعاوني:</b> بناء خريطة مشتركة في المجموعة يولّد نقاشاً حول المعنى.</li>\n</ul>\n<p class=\"tip\"><b>في الامتحان:</b> إذا ظهر رابط خاطئ في خريطة الطالب، فالاستخدام الأهم هو كشف المفهوم الخاطئ وعلاجه.</p>"}, "misc": {"t": "المفاهيم الخاطئة والتغيير المفاهيمي", "h": "<p>المفهوم الخاطئ (البديل) تصور يحمله الطالب يخالف المعرفة العلمية، ويقاوم التغيير لأنه يبدو منطقياً له.</p>\n<ul>\n<li><b>مصادره:</b> الخبرة اليومية، واللغة الشائعة، والكتب، وأحياناً تبسيط المعلم.</li>\n<li><b>الوقاية:</b> ربط المفاهيم بالحياة، لأن المعرفة ذات المعنى تقل فيها التصورات البديلة.</li>\n<li><b>الكشف:</b> اختبار تشخيصي بأسئلة تتطلب تفسيراً، وخرائط المفاهيم، والمقابلة.</li>\n<li><b>خطوات التغيير المفاهيمي (بوسنر):</b> كشف التصور، ثم إحداث تعارض معرفي بدليل (عدم الرضا)، ثم تقديم المفهوم العلمي (معقول ومثمر)، ثم تطبيقه في مواقف جديدة.</li>\n</ul>\n<p class=\"ex\"><b>أمثلة من مواد مختلفة:</b> الرياضيات: «الضرب يكبّر الناتج دائماً»، «0.25 أكبر من 0.3». العربية: «الجمع يكون دائماً بـ ون أو ات». العلوم: «الجسم الأثقل يسقط أسرع». الجغرافيا: «الشمال يعني الأعلى دائماً».</p>\n<p class=\"tip\"><b>في الامتحان:</b> «لضمان عدم تكوّن مفاهيم خاطئة» = ربط المفاهيم بالحياة. «لتصحيح مفهوم خاطئ» = نشاط يكشفه ثم يحدث تعارضاً بالدليل.</p>"}, "terms": {"t": "القياس والتقويم والاختبار والبحث العلمي", "h": "<table class=\"tbl\">\n<tr><th>المصطلح</th><th>معناه</th><th>مثال</th></tr>\n<tr><td><b>القياس</b></td><td>وصف كمي للخاصية (أرقام) دون حكم</td><td>حصل الطالب على 15 من 20</td></tr>\n<tr><td><b>الاختبار</b></td><td>أداة من أدوات القياس: أسئلة منظمة</td><td>اختبار الوحدة الأولى</td></tr>\n<tr><td><b>التقويم</b></td><td>جمع البيانات وتحليلها وإصدار حكم واتخاذ قرار للتحسين</td><td>العلامات ضعيفة، إذن أعدّل خطتي</td></tr>\n<tr><td><b>التقييم</b></td><td>إصدار الحكم على القيمة (جزء من التقويم)</td><td>مستواه جيد</td></tr>\n<tr><td><b>البحث العلمي</b></td><td>التطبيق المنهجي للطريقة العلمية في حل المشكلات</td><td>دراسة أسباب تدني التحصيل</td></tr>\n</table>\n<p><b>العلاقة:</b> الاختبار أداة للقياس، والقياس جزء من التقويم. التقويم أشمل لأنه ينتهي بقرار.</p>\n<p class=\"tip\"><b>في الامتحان:</b> كلمات «حكم» و«قرار» و«تحسين» تعني التقويم. «رقم» أو «درجة» تعني القياس.</p>"}, "quality": {"t": "خصائص الاختبار الجيد", "h": "<ul>\n<li><b>الصدق:</b> يقيس ما وُضع لقياسه. مثال الخلل: اختبار لمهارة المحادثة يقيس حفظ المفردات. يناسب الاختبار التحصيلي <b>صدق المحتوى</b> (جدول المواصفات).</li>\n<li><b>الثبات:</b> يعطي النتائج نفسها تقريباً إذا أعيد تطبيقه على الطلبة أنفسهم.</li>\n<li><b>الموضوعية:</b> لا تتأثر الدرجة بالمصحح. الأسئلة المقالية أضعف في الموضوعية، وعلاجها نموذج إجابة وسلم تصحيح.</li>\n<li><b>الشمول:</b> يغطي أجزاء المحتوى والأهداف.</li>\n<li><b>التمييز:</b> يفرّق بين المتفوق والضعيف.</li>\n<li><b>الصعوبة المناسبة:</b> لا سهل جداً ولا صعب جداً.</li>\n</ul>\n<p><b>المقالي</b> مناسب لقياس التنظيم والتعبير والمستويات العليا، وعيبه الذاتية. <b>الموضوعي</b> (اختيار من متعدد) شامل وسهل التصحيح، وعيبه صعوبة إعداده واحتمال التخمين.</p>\n<p class=\"tip\"><b>في الامتحان:</b> «يقيس ما وُضع له» = صدق. «النتيجة نفسها عند الإعادة» = ثبات. «لا يختلف باختلاف المصحح» = موضوعية.</p>"}, "tools": {"t": "أدوات التقويم الواقعي (البديل)", "h": "<ul>\n<li><b>قائمة الشطب (الرصد):</b> سلوكيات أو خطوات تُرصد بـ«نعم/لا». مناسبة لخطوات مهارة عملية.</li>\n<li><b>سلم التقدير:</b> معايير مع مستويات أداء متدرجة (ممتاز، جيد...). للمهارات والمشاريع والتقارير.</li>\n<li><b>سلم التقدير اللفظي (الروبريك):</b> وصف لفظي لكل مستوى أداء.</li>\n<li><b>السجل القصصي:</b> وصف قصير موضوعي لموقف محدد لاحظه المعلم، دون حكم أو تفسير.</li>\n<li><b>ملف الإنجاز:</b> مجموعة منظمة من أعمال الطالب تُظهر تطوره ومهاراته.</li>\n<li><b>بطاقة الملاحظة:</b> لسلوك ظاهر كالإنصات والمشاركة.</li>\n</ul>\n<p><b>العدالة في التقييم:</b> تحري الموضوعية، وإعلان معايير التقييم للطلبة مسبقاً، وتنويع الأدوات.</p>\n<p class=\"ex\"><b>أمثلة:</b> الإلقاء والتلاوة يُقوَّمان بسلم تقدير (النطق، الطلاقة، التواصل البصري). وخطوات تجربة عملية أو مهارة رياضية تُقوَّم بقائمة شطب أثناء الأداء.</p>\n<p class=\"tip\"><b>في الامتحان:</b> عبارة السجل القصصي الصحيحة محددة وقابلة للملاحظة («تدخّل دون إذن خمس مرات»)، لا حكم عام («مشاغب»).</p>"}, "types": {"t": "أنواع التقويم ووظائفه", "h": "<table class=\"tbl\">\n<tr><th>النوع</th><th>متى؟</th><th>الهدف</th></tr>\n<tr><td><b>التشخيصي (القبلي)</b></td><td>قبل التعلم</td><td>تحديد الاستعداد والمتطلبات السابقة ونقاط الضعف</td></tr>\n<tr><td><b>التكويني (البنائي)</b></td><td>أثناء التعلم</td><td>تحسين التعلم وتعديل التدريس فوراً</td></tr>\n<tr><td><b>الختامي</b></td><td>نهاية الوحدة أو الفصل</td><td>الحكم على التحصيل، النجاح والرسوب</td></tr>\n</table>\n<ul>\n<li><b>بعد الاختبار التشخيصي:</b> دروس علاجية قبل الانتقال للمحتوى الجديد.</li>\n<li><b>ضعف الصف كله في اختبار:</b> تغذية راجعة للمعلم ليعيد الشرح بأساليب أخرى.</li>\n<li><b>القيمة الحقيقية لنتائج الاختبار:</b> تحديد جوانب القوة والضعف.</li>\n<li><b>الاستمرارية:</b> التقويم يلازم العملية التعليمية من بدايتها إلى نهايتها.</li>\n<li><b>التقويم الذاتي:</b> ثقافة يُدرَّب عليها الطلبة لتحمل مسؤولية تعلمهم.</li>\n</ul>\n<p class=\"tip\"><b>في الامتحان:</b> «في منتصف الدرس» أو «لتعديل التدريس» = تكويني.</p>"}, "stats": {"t": "الإحصاء التربوي: الوسط والانحراف والعلامة المعيارية", "h": "<ul>\n<li><b>الوسط الحسابي:</b> يحدد مستوى التحصيل. الوسط الأعلى يعني تحصيلاً أعلى.</li>\n<li><b>الانحراف المعياري:</b> يقيس التشتت. الانحراف <b>الأصغر</b> يعني تجانساً أكبر وعلامات متقاربة، والأكبر يعني فروقاً فردية واسعة.</li>\n<li><b>العلامة المعيارية (ز):</b> ز = (العلامة − الوسط) ÷ الانحراف المعياري. تُستخدم للمقارنة بين طلبة من شعب أو اختبارات مختلفة. الموجبة فوق الوسط، والسالبة دونه.</li>\n<li><b>معامل الارتباط:</b> قريب من +1 علاقة طردية قوية، وقريب من صفر لا علاقة.</li>\n</ul>\n<p class=\"ex\"><b>مثال محلول:</b> طالب 80 في شعبة (وسط 70، انحراف 5): ز = 10 ÷ 5 = 2. طالب 85 في شعبة (وسط 70، انحراف 15): ز = 15 ÷ 15 = 1. الأول أفضل نسبياً رغم أن علامته أقل.</p>\n<p><b>القرار التربوي:</b> انحراف كبير يعني تعليماً متمايزاً. انحراف صغير مع وسط منخفض يعني خطة علاجية جماعية للصف.</p>\n<p class=\"tip\"><b>في الامتحان:</b> «أيهما أشطر؟» انظر للوسط. «أيهما أكثر تجانساً؟» انظر للانحراف الأصغر. «طالبان من شعبتين» احسب ز.</p>"}, "theories": {"t": "النظريات الثلاث الكبرى في التعلم", "h": "<table class=\"tbl\">\n<tr><th></th><th>السلوكية</th><th>المعرفية</th><th>البنائية</th></tr>\n<tr><td><b>التعلم</b></td><td>تغير في السلوك الملاحظ بالتعزيز</td><td>معالجة المعلومات وتنظيمها في الذهن</td><td>بناء المتعلم لمعرفته من تفاعل خبراته السابقة مع الجديدة</td></tr>\n<tr><td><b>الطالب</b></td><td>مستجيب</td><td>معالج نشط للمعلومات</td><td>باني للمعرفة ومكتشف</td></tr>\n<tr><td><b>المعلم</b></td><td>مصدر المعرفة ومتحكم بالتعزيز</td><td>منظم للمعلومات</td><td>ميسّر وموجّه</td></tr>\n<tr><td><b>أعلامها</b></td><td>بافلوف، ثورندايك، سكنر</td><td>أوزوبل، معالجة المعلومات</td><td>بياجيه، فيجوتسكي، برونر</td></tr>\n<tr><td><b>كلمات دالة</b></td><td>تعزيز، تكرار، تجزئة المهمة، تعلم مبرمج</td><td>منظم متقدم، ذاكرة، ما وراء المعرفة</td><td>اكتشاف، خبرات سابقة، تعاون، تغيير مفاهيمي</td></tr>\n</table>\n<p><b>أوزوبل (التعلم ذو المعنى):</b> ربط الجديد بالبنية المعرفية السابقة، وأداته <b>المنظم المتقدم</b>.</p>\n<p><b>ثورندايك:</b> قانون الأثر (الرضا يقوي الاستجابة)، وقانون التدريب (التكرار)، وقانون الاستعداد.</p>\n<p class=\"tip\"><b>في الامتحان:</b> البنائية هي النظرية التي جعلت الطالب محور العملية التعليمية.</p>"}, "vyg": {"t": "فيجوتسكي: منطقة النمو القريب والسقالات", "h": "<p>فيجوتسكي صاحب <b>البنائية الاجتماعية</b>: التعلم يحدث بالتفاعل الاجتماعي واللغة.</p>\n<ul>\n<li><b>منطقة النمو القريب (الوشيك):</b> المسافة بين ما يؤديه الطالب وحده وما يؤديه بمساعدة.</li>\n<li><b>الآخر الأكثر معرفة:</b> قد يكون المعلم أو زميلاً أو والداً.</li>\n<li><b>السقالات التعليمية:</b> دعم مؤقت داخل منطقة النمو القريب، ومكوناتها: <b>النمذجة</b> (المعلم يؤدي المهارة)، ثم <b>الدعم والممارسة الموجهة</b>، ثم <b>السحب التدريجي للدعم</b> حتى الاستقلال.</li>\n<li><b>طالب ينجز وحده بسهولة:</b> يحتاج مهمة أعلى في منطقة نموه القريب.</li>\n</ul>\n<p class=\"ex\"><b>أمثلة:</b> الكتابة: أكتب فقرة أمامهم وأنا أفكر بصوت عالٍ، ثم فقرة ناقصة يكملونها، ثم فقرة كاملة وحدهم. الرياضيات: أحل مسألة كلامية، ثم مسألة نصف محلولة، ثم مسألة كاملة.</p>\n<p class=\"tip\"><b>في الامتحان:</b> «يحلها بمساعدة زميله» = منطقة النمو القريب. «دعم مؤقت يُسحب تدريجياً» = السقالات.</p>"}, "piaget": {"t": "بياجيه: مراحل النمو المعرفي", "h": "<table class=\"tbl\">\n<tr><th>المرحلة</th><th>العمر</th><th>السمة</th></tr>\n<tr><td>الحسية الحركية</td><td>0–2</td><td>التعلم بالحواس والحركة، دوام الشيء</td></tr>\n<tr><td>ما قبل العمليات</td><td>2–7</td><td>التمركز حول الذات، اللغة والرموز</td></tr>\n<tr><td><b>العمليات المادية (المحسوسة)</b></td><td>7–11</td><td>تفكير منطقي بشرط المحسوس، الاحتفاظ، التصنيف</td></tr>\n<tr><td>العمليات المجردة (الشكلية)</td><td>11 فما فوق</td><td>التفكير المجرد والفرضي</td></tr>\n</table>\n<ul>\n<li><b>التمثّل:</b> دمج الخبرة الجديدة في البنية المعرفية القائمة دون تغييرها.</li>\n<li><b>المواءمة:</b> تعديل البنية المعرفية لتستوعب خبرة لا تنسجم معها.</li>\n<li><b>التوازن:</b> الحالة التي يسعى إليها العقل؛ والتعارض بين الخبرة والتوقع يخل بالتوازن فيدفع إلى المواءمة.</li>\n</ul>\n<p class=\"tip\"><b>في الامتحان:</b> «الوسائل المحسوسة أكثر ضرورة» = العمليات المادية. «حيرة الطلبة أمام نتيجة غير متوقعة» = اختلال التوازن.</p>"}, "bruner": {"t": "برونر: التمثيل والاكتشاف والمنهج الحلزوني", "h": "<ul>\n<li><b>أنماط التمثيل المعرفي:</b> العملي (بالفعل والمحسوس)، ثم الأيقوني (بالصور والمخططات)، ثم الرمزي (باللغة والرموز).</li>\n<li><b>التعلم بالاكتشاف:</b> يصل الطالب إلى المفهوم بنفسه من الملاحظة والتجربة.</li>\n<li><b>المنهج الحلزوني:</b> تُقدَّم المفاهيم المحورية في صفوف متعددة بعمق واتساع متزايدين.</li>\n</ul>\n<p class=\"ex\"><b>أمثلة:</b> الكسور: قطع محسوسة، ثم رسومات، ثم رموز (تمثيل). مفهوم المواطنة أو الكسور يتكرر من الصفوف الأولى إلى العليا بعمق أكبر (حلزوني). استنتاج قاعدة نحوية من أمثلة يحللها الطلبة (اكتشاف).</p>\n<p class=\"tip\"><b>في الامتحان:</b> ميّز بين الثلاثة: «مجسم ثم صورة ثم رمز» تمثيل، «عبر الصفوف» حلزوني، «يصل بنفسه» اكتشاف.</p>"}, "kohl": {"t": "كولبرج: مراحل التفكير الأخلاقي", "h": "<table class=\"tbl\">\n<tr><th>المستوى</th><th>المرحلة</th><th>الدافع</th></tr>\n<tr><td rowspan=\"2\">ما قبل العُرفي</td><td>1. تجنب العقاب والطاعة</td><td>الخوف من العقاب</td></tr>\n<tr><td>2. المنفعة الشخصية والتبادل</td><td>ماذا سأستفيد؟</td></tr>\n<tr><td rowspan=\"2\">العُرفي</td><td>3. الولد الطيب</td><td>إرضاء الآخرين</td></tr>\n<tr><td>4. القانون والنظام</td><td>حفظ النظام في المجتمع</td></tr>\n<tr><td rowspan=\"2\">ما بعد العُرفي</td><td>5. العقد الاجتماعي</td><td>القوانين اتفاق لخدمة الناس</td></tr>\n<tr><td>6. المبادئ الأخلاقية العالمية</td><td>الضمير والعدالة</td></tr>\n</table>\n<p><b>الارتقاء الأخلاقي:</b> يتحقق بمناقشة المعضلات الأخلاقية وطلب تبرير كل رأي، لا بإعطاء الإجابة الصحيحة جاهزة.</p>\n<p class=\"tip\"><b>في الامتحان:</b> انظر إلى <b>الدافع</b> في عبارة الطالب لتحدد المرحلة.</p>"}, "bandura": {"t": "باندورا: التعلم الاجتماعي (بالملاحظة)", "h": "<ul>\n<li><b>الفكرة:</b> نتعلم بملاحظة النماذج وتقليدها.</li>\n<li><b>مراحل التعلم بالملاحظة:</b> الانتباه، ثم الاحتفاظ، ثم إعادة الإنتاج، ثم الدافعية.</li>\n<li><b>التعزيز البديل:</b> يتعلم الطالب حين يرى زميله يُكافأ.</li>\n<li><b>الكفاءة الذاتية:</b> اعتقاد الفرد بقدرته على النجاح، وأقوى مصادرها خبرات النجاح المتدرجة.</li>\n<li><b>المعلم قدوة:</b> طريقة إصغائه واحترامه للآراء والتزامه بالمواعيد وقواعد السلامة تُتعلم أكثر من كلامه.</li>\n</ul>\n<p class=\"tip\"><b>في الامتحان:</b> «يقلده الطلبة» = النمذجة. «رأى زميله يُكافأ فقلّده» = التعزيز البديل.</p>"}, "reinf": {"t": "التعزيز والعقاب وتعديل السلوك (سكنر)", "h": "<table class=\"tbl\">\n<tr><th></th><th>نُضيف شيئاً</th><th>نُزيل شيئاً</th></tr>\n<tr><td><b>لزيادة السلوك</b></td><td>تعزيز موجب (مدح، نجمة)</td><td>تعزيز سالب (إعفاء من واجب)</td></tr>\n<tr><td><b>لتقليل السلوك</b></td><td>عقاب موجب (واجب إضافي)</td><td>عقاب سالب (سحب امتياز، خصم علامة)</td></tr>\n</table>\n<ul>\n<li><b>الإطفاء:</b> إيقاف التعزيز عن سلوك (تجاهل سلوك لفت الانتباه) فيضعف.</li>\n<li><b>تعزيز السلوك البديل:</b> يُعزَّز السلوك المرغوب فور حدوثه.</li>\n<li><b>التشكيل:</b> تعزيز الاقترابات المتتالية من السلوك المطلوب.</li>\n<li><b>التعلم المبرمج:</b> تجزئة المهمة لخطوات صغيرة مع تعزيز فوري.</li>\n<li><b>أفضل أنواع العقاب تربوياً:</b> الحرمان من مكافأة أو سحب امتياز.</li>\n</ul>\n<p class=\"tip\"><b>الفخ الأشهر:</b> التعزيز السالب <b>ليس عقاباً</b>؛ هو إزالة شيء مزعج ليزيد السلوك.</p>"}, "diff": {"t": "التعليم المتمايز", "h": "<p>تكييف التعليم داخل الصف الواحد ليستجيب لاختلاف الطلبة في <b>الاستعداد والاهتمام ونمط التعلم</b>.</p>\n<ul>\n<li><b>المحتوى:</b> ماذا يتعلم الطالب (مصادر بمستويات مختلفة).</li>\n<li><b>العمليات:</b> كيف يتعلم (أنشطة مختلفة للهدف نفسه).</li>\n<li><b>الناتج:</b> كيف يُظهر تعلمه (مطوية، فيديو، مجسم).</li>\n<li><b>البيئة:</b> تنظيم المكان والجو الصفي.</li>\n</ul>\n<p><b>أدواته:</b> المهام المتدرجة، ومراكز التعلم، والمجموعات المرنة، وعقود التعلم، ولوحة الاختيارات.</p>\n<p><b>الموهوبون:</b> الإثراء (تعميق بمشروع بحثي) أو التسريع. والإثراء أنسب داخل الصف.</p>\n<p class=\"tip\"><b>في الامتحان:</b> «مهام مختلفة حسب المستوى» = متمايز. «يقدم ما تعلمه بصيغ مختلفة» = تمايز في الناتج.</p>"}, "modes": {"t": "أنماط التعليم: المدمج والمتزامن والمقلوب", "h": "<table class=\"tbl\">\n<tr><th>النمط</th><th>معناه</th></tr>\n<tr><td><b>المدمج</b></td><td>يجمع التعليم الوجاهي والتعليم الإلكتروني في منظومة واحدة</td></tr>\n<tr><td><b>المتزامن</b></td><td>تفاعل مباشر في الوقت نفسه (حصة بث مباشر)</td></tr>\n<tr><td><b>غير المتزامن</b></td><td>كل طالب يتعلم في وقته (فيديو مسجل، منتدى)</td></tr>\n<tr><td><b>الصف المقلوب</b></td><td>المحتوى في البيت أولاً (فيديو)، ثم التطبيق وحل المشكلات في الصف</td></tr>\n<tr><td><b>المتمايز</b></td><td>تكييف التعليم حسب الفروق الفردية (ليس نمطاً تقنياً)</td></tr>\n</table>\n<p class=\"tip\"><b>في الامتحان:</b> لا تخلط بين المدمج والمقلوب؛ المقلوب نوع من المدمج يبدأ بالمحتوى في البيت.</p>"}, "mi": {"t": "الذكاءات المتعددة وأنماط التعلم وصعوبات التعلم", "h": "<p><b>جاردنر:</b> لكل فرد مزيج من الذكاءات بدرجات <b>متفاوتة</b>، ويمكن تنميتها: اللغوي، المنطقي الرياضي، البصري المكاني، الجسمي الحركي، الموسيقي، الاجتماعي، الذاتي، الطبيعي.</p>\n<p><b>أنماط التعلم:</b> البصري (مخططات، خرائط)، والسمعي (نقاش، شرح)، والحركي (نماذج، تجارب). والتنويع يصل للجميع.</p>\n<p><b>صعوبات التعلم:</b> طالب ذكاؤه عادي أو فوق العادي، سليم الحواس، لا يستفيد من خبرات التعلم كزملائه في مهارة محددة (قراءة، كتابة، حساب).</p>\n<ul>\n<li><b>العلاقة:</b> نستخدم الذكاءات القوية لدى الطالب لتعويض الضعف، مع استمرار علاج الضعف.</li>\n<li><b>الكشف:</b> قائمة ملاحظة، والتشخيص بالتنسيق مع غرفة المصادر.</li>\n<li><b>مشكلات النطق:</b> التحليل الصوتي (أصوات الحروف والمقاطع).</li>\n</ul>\n<p class=\"ex\"><b>أمثلة:</b> اللغوي يخاطَب بالقصة والنقاش، والمنطقي بالألغاز والمسائل، والبصري بالخرائط الذهنية، والحركي بالتمثيل والنماذج، والموسيقي بالأناشيد، والطبيعي بالتصنيف والرحلات.</p>\n<p class=\"tip\"><b>في الامتحان:</b> «يمتلك الفرد مستويات متقاربة من الذكاءات» عبارة خاطئة.</p>"}, "samr": {"t": "دمج التقنية: نموذج SAMR والرحلات المعرفية", "h": "<table class=\"tbl\">\n<tr><th>المستوى</th><th>المعنى</th><th>مثال</th></tr>\n<tr><td>الاستبدال</td><td>التقنية تحل محل أداة دون تغيير وظيفي</td><td>نص الكتاب على الشاشة</td></tr>\n<tr><td>التعزيز</td><td>استبدال مع تحسين وظيفي</td><td>اختبار إلكتروني بتصحيح فوري</td></tr>\n<tr><td>التعديل</td><td>إعادة تصميم المهمة</td><td>تقرير تفاعلي مشترك</td></tr>\n<tr><td><b>إعادة التعريف</b></td><td>مهمة لم تكن ممكنة دون التقنية</td><td>مشروع رقمي مشترك مع مدرسة أخرى يُنشر لجمهور حقيقي</td></tr>\n</table>\n<p><b>الرحلة المعرفية (WebQuest):</b> نشاط بحث موجه في الإنترنت بمهمة واضحة ومصادر محددة، فيصل الطالب للمعلومة بأقل جهد. أهم ما يُراعى: مناسبتها لنتاجات التعلم.</p>\n<p><b>العدالة الرقمية:</b> توفير بدائل داخل المدرسة لمن لا يملك جهازاً.</p>\n<p><b>نموذج TPACK:</b> تكامل معرفة المحتوى وطرق التدريس والتقنية.</p>\n<p class=\"tip\"><b>في الامتحان:</b> التقنية وسيلة لتحقيق هدف تعلمي، والأعلى ما يجعل الطالب منتجاً لا متلقياً.</p>"}, "ethics": {"t": "الأمانة العلمية والذكاء الاصطناعي", "h": "<ul>\n<li><b>الأمانة العلمية</b> أول ما يُنبَّه إليه الطلبة عند البحث في الإنترنت.</li>\n<li><b>النسخ الحرفي:</b> فرصة تعلم؛ حوار، ثم تدريب على التوثيق وإعادة الصياغة، ثم إعادة العمل.</li>\n<li><b>تقييم المصادر:</b> من الكاتب؟ هل المصدر علمي موثوق؟ هل المعلومة حديثة؟ (تربية إعلامية وتفكير ناقد).</li>\n<li><b>الذكاء الاصطناعي:</b> يُوظَّف أداة مساعدة بضوابط واضحة، مع مهام أصيلة تتطلب تفكيراً وتطبيقاً شخصياً (تجربة صفية، رأي مبرر، ربط بالبيئة المحلية).</li>\n</ul>\n<p class=\"tip\"><b>في الامتحان:</b> الخيارات العقابية (صفر، خصم) أضعف من الخيار التربوي الذي يعلّم المهارة.</p>"}, "etw": {"t": "التوأمة الإلكترونية (eTwinning) وشبكات التعلم العالمية", "h": "<p>مبادرة أطلقتها المفوضية الأوروبية عام 2005، تربط مدارس في دول مختلفة لتنفيذ <b>مشاريع مشتركة</b> باستخدام التكنولوجيا. تنفذها في الأردن مبادرة «مدرستي» بالشراكة مع وزارة التربية والتعليم.</p>\n<ul>\n<li><b>خطواتها:</b> الاتفاق مع الشريك على هدف وموضوع مرتبط بالمنهاج وخطة زمنية، ثم اختيار الأدوات، ثم التنفيذ بأنشطة مشتركة، ثم عرض النواتج وتقويمها.</li>\n<li><b>أثرها على الطلبة:</b> الانفتاح على ثقافة الآخر، ومهارات التواصل واللغة، والتعلم بالمشاريع.</li>\n<li><b>أثرها على المعلم:</b> تطوير مهني وتبادل خبرات دولي.</li>\n</ul>\n<p class=\"ex\"><b>أمثلة:</b> تبادل رسائل بالإنجليزية عن التراث في البلدين، أو مقارنة عادات الأعياد، أو مشروع مشترك عن ترشيد المياه.</p>"}, "partner": {"t": "الشراكة مع أولياء الأمور", "h": "<p>الشراكة الحقيقية تعني إشراك الأهل في <b>تعلم أبنائهم</b> وفي التخطيط والتنفيذ، لا مجرد إبلاغهم بالنتائج.</p>\n<ul>\n<li><b>أهدافها:</b> متابعة تعلم الأبناء، ودعمهم نفسياً، وتعزيز التواصل بين البيت والمدرسة. ليس من أهدافها تأمين الموارد المادية أو جمع البيانات الشخصية.</li>\n<li><b>أدواتها:</b> مجالس الآباء والأمهات، ولقاءات دورية بمواعيد مسبقة، وأنشطة منزلية مشتركة، وتقارير فردية عن تقدم الطالب.</li>\n<li><b>ولي الأمر المعترض:</b> استقبال هادئ، وإصغاء، وشفافية بعرض الأوراق ومعايير التصحيح.</li>\n<li><b>الأهل الغائبون:</b> تنويع القنوات والأوقات، والمبادرة بالتواصل الإيجابي لا عند المشكلات فقط.</li>\n<li><b>مساعدة الأبناء في البيت:</b> توجيههم للبحث عن مصادر المعرفة، لا حل الواجبات عنهم.</li>\n</ul>\n<p class=\"tip\"><b>في الامتحان:</b> الخيار الذي يجعل الأهل شركاء في نشاط تعلمي أقوى من المحاضرة أو النشرة.</p>"}, "service": {"t": "التعلم بالخدمة والقضايا المجتمعية", "h": "<p>التعلم بالخدمة يربط خدمة المجتمع بأهداف المنهاج، وينقل الطالب من <b>المعرفة إلى السلوك</b>.</p>\n<ul>\n<li><b>مراحله:</b> تحديد حاجة مجتمعية، ثم تخطيط الطلبة، ثم التنفيذ، ثم <b>التأمل</b> فيما تعلموه، ثم عرض النتائج والتوصيات.</li>\n<li><b>توعية بقضية (فقر، بيئة):</b> إذاعة أو نشاط معرفي يتبعه عمل تطوعي يخطط له الطلبة.</li>\n<li><b>الكرامة والسرية:</b> لا يُذكر اسم محتاج، ولا تُصوَّر المساعدات، ويُنسق الدعم عبر المرشد والإدارة.</li>\n<li><b>مجلس الطلبة (البرلمان الصغير):</b> من مظاهر حق الطفل في التعبير والمشاركة.</li>\n</ul>\n<p class=\"ex\"><b>أمثلة:</b> حملة تنظيف حديقة الحي تُربط بدرس البيئة في العلوم أو بالمواطنة في التربية الوطنية، ويكتب الطلبة توصيات للبلدية في حصة اللغة العربية.</p>\n<p class=\"tip\"><b>في الامتحان:</b> النشاط الأقوى: مستدام، يخطط له الطلبة، مرتبط بالمنهاج، يحفظ الكرامة.</p>"}, "ar": {"t": "البحث الإجرائي", "h": "<p>بحث يجريه <b>المعلم في صفه</b> لحل مشكلة واقعية تواجهه وتحسين ممارسته، ونتائجه محلية لا تُعمّم.</p>\n<ul>\n<li><b>خطواته:</b> تحديد المشكلة بدقة، ثم جمع البيانات وتشخيص الأسباب، ثم وضع خطة إجرائية (استراتيجية)، ثم التنفيذ، ثم جمع بيانات بعدية وتقويم الأثر، ثم التأمل وتعديل الممارسة.</li>\n<li><b>أدواته:</b> الملاحظة المباشرة (للسلوك والتفاعل)، والاختبارات القبلية والبعدية (للتحصيل)، والاستبانة والمقابلة (للآراء والاتجاهات).</li>\n<li><b>فائدته:</b> تعود على المعلم وطلبته مباشرة، وتنعكس على العملية التعليمية التعلمية في الصف.</li>\n<li><b>الفرق عن البحث الأكاديمي:</b> الأكاديمي يجريه باحث بعينة كبيرة بهدف التعميم واختبار النظريات.</li>\n</ul>\n<p class=\"tip\"><b>في الامتحان:</b> الخطوة الأولى دائماً تحديد المشكلة. ودليل النجاح مقارنة قبلية بعدية.</p>"}, "reflect": {"t": "التأمل الذاتي والتنمية المهنية", "h": "<p><b>التأمل الذاتي</b> أرقى صور النمو المهني: يراجع المعلم ممارساته ليحسنها. وهو أداة مستدامة لا تحتاج إلا إلى المعلم نفسه.</p>\n<ul>\n<li><b>مراحله:</b> وصف الموقف، ثم تحليل أسبابه، ثم اتخاذ إجراء لاحق. التأمل لا يقتصر على الوصف.</li>\n<li><b>أدواته:</b> مذكرات التأمل، وتسجيل الحصة، وتغذية راجعة من الطلبة والزملاء.</li>\n<li><b>التنمية المهنية:</b> عملية شاملة تهدف إلى التجديد والابتكار وتحسين الممارسات، والتدريب جزء منها.</li>\n<li><b>أثر التدريب</b> يقاس بتغير الممارسة وتعلم الطلبة، لا بالشهادة.</li>\n<li><b>مجتمعات التعلم المهنية:</b> معلمون يتشاركون رؤية وثقافة تعاون، ويتبادلون الزيارات ويناقشون أعمال الطلبة.</li>\n<li><b>أكبر تحدٍّ</b> أمام التحاق المعلمين ببرامج التنمية المهنية: الوقت.</li>\n</ul>\n<p class=\"tip\"><b>في الامتحان:</b> عند النقد أو الإخفاق أو فتور الطلبة، الإجابة غالباً تبدأ بالتأمل أو بخطة نمو مهني.</p>"}, "lead": {"t": "قيادة التغيير والإنجاز وملف الجائزة", "h": "<p><b>قيادة التغيير</b> أول معايير الجائزة: المعلم يبادر بالتجديد وينشره في مجتمعه المدرسي.</p>\n<ul>\n<li><b>القيادة بالقدوة:</b> يجرّب الممارسة الجديدة، ويقيس أثرها، ويشارك زملاءه نتائجها في حصص تطبيقية.</li>\n<li><b>الإنجاز:</b> مبادرة تتجاوز الواجب الوظيفي، لها أثر موثق بأدلة، ويتبناها آخرون. البحوث والمؤلفات إنجازات شخصية.</li>\n<li><b>الرؤية:</b> صورة مستقبلية بعيدة ملهمة («متعلم مفكر مبدع منتمٍ»). <b>الرسالة:</b> ما نفعله لتحقيقها، وتعبر عن الأهداف القريبة والأولويات.</li>\n<li><b>عند مراجعة الرؤية والرسالة:</b> تُعاد صياغتهما أولاً، ثم تُبنى الخطة الإجرائية.</li>\n<li><b>صفات المعلم المتميز:</b> المبادرة، والريادة، والمسؤولية، والتفكير الإيجابي، والتشارك، وتمثّل القيم.</li>\n</ul>\n<p class=\"tip\"><b>في الامتحان:</b> «أنتظر» و«أطلب من الإدارة إلزامهم» أضعف دائماً من «أبادر وأشارك وأقيس الأثر».</p>"}, "att": {"t": "اتجاهات المعلم المتميز والقدوة", "h": "<ul>\n<li><b>كل طالب قادر على التعلم:</b> توقعات مرتفعة مع دعم، لا تخفيض للأهداف.</li>\n<li><b>الطلبة يتحملون مسؤولية تعلمهم:</b> المعلم يشركهم في التخطيط والتقويم.</li>\n<li><b>القدوة:</b> القيم تُكتسب بالملاحظة؛ المعلم الذي يطالب بالالتزام يلتزم أولاً.</li>\n<li><b>الانتماء للمهنة:</b> يظهر بتمثل قيمها سلوكاً، لا بالكتابة عنها.</li>\n<li><b>التعامل مع الزملاء:</b> حوار مباشر عند الخلاف، تشجيع للأفكار الجديدة، مشاركة الخبرات.</li>\n<li><b>الأمانة العلمية:</b> يتقبل المعلم ملاحظة الطالب ويتحقق منها.</li>\n</ul>\n<p class=\"tip\"><b>في الامتحان:</b> أسئلة الاتجاهات هي الأقل أداءً عند المتقدمين. اختر دائماً ما يعكس الإيمان بالطالب والمبادرة والتعاون والمسؤولية.</p>"}};
+
+const SRC={s1:"أسئلة المواضيع المتداولة وأسئلة سابقة",s2:"النسخة التدريبية بالإجابات المقترحة",s3:"بنك الأسئلة الموسّع",s4:"بنك المواقف التدريسية والتربوية",s5:"مواقف الاستراتيجيات",s6:"الأسئلة المتوقعة"};
+
+let S = null;
+const $ = id => document.getElementById(id);
+const LET = ["أ","ب","ج","د","هـ"];
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const val = n => (document.querySelector(`input[name=${n}]:checked`)||{}).value;
+
+// theme
+(function(){
+  let t=null; try{t=localStorage.getItem("theme");}catch(e){}
+  if(t) document.documentElement.dataset.theme=t;
+  $("themeBtn").onclick=()=>{
+    const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    const nt = dark?"light":"dark"; document.documentElement.dataset.theme=nt;
+    try{localStorage.setItem("theme",nt);}catch(e){}
+  };
+})();
+
+const TOPICS=[...new Set(Q.map(q=>q.t))];
+let TOPIC="all";
+const order=Q.map((q,i)=>i);
+function buildGrid(){
+  $("qgrid").innerHTML=order.map(i=>`<i class="${Q[i].m?"":"k"}" data-t="${Q[i].t}"></i>`).join("");
+  const dots=[...$("qgrid").children];
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  dots.forEach((d,j)=>{ if(reduce){d.classList.add("on");return;} setTimeout(()=>d.classList.add("on"), 250+ (j%10)*35 + Math.floor(j/10)*55); });
+  const all=`<button class="tchip" aria-pressed="true" data-t="all">كل المواضيع <em>${Q.length}</em></button>`;
+  $("topicbar").innerHTML=all+TOPICS.map(t=>`<button class="tchip" aria-pressed="false" data-t="${t}">${t} <em>${Q.filter(q=>q.t===t).length}</em></button>`).join("");
+  $("topicbar").querySelectorAll(".tchip").forEach(b=>b.onclick=()=>{
+    TOPIC=b.dataset.t;
+    $("topicbar").querySelectorAll(".tchip").forEach(x=>x.setAttribute("aria-pressed",x===b));
+    dots.forEach(d=>{ d.classList.toggle("hl",TOPIC!=="all"&&d.dataset.t===TOPIC); d.classList.toggle("dim",TOPIC!=="all"&&d.dataset.t!==TOPIC); });
+    $("gridTitle").textContent = TOPIC==="all" ? "مئة سؤال مختار" : TOPIC;
+    $("gridSub").textContent = TOPIC==="all" ? "تسعون موقفاً وعشرة أسئلة معرفة" : `${qn(Q.filter(q=>q.t===TOPIC).length)} في هذا الموضوع`;
+    counts();
+  });
+}
+function inPool(q){ return TOPIC==="all"||q.t===TOPIC; }
+function counts(){
+  const pool = Q.filter(inPool).length;
+  let opts = TOPIC==="all" ? [20,50,100] : [pool];
+  const prev = val("cnt"), prevOk = opts.map(String).includes(prev);
+  const labels={20:"جلسة قصيرة",50:"جلسة متوسطة",100:"الدفتر كاملاً"};
+  $("countSeg").style.gridTemplateColumns=`repeat(${opts.length},1fr)`;
+  $("countSeg").innerHTML = opts.map(n=>`<label><input type="radio" name="cnt" value="${n}" ${(prev==n||(!prevOk&&n===opts[opts.length-1]))?"checked":""}><span>${n}<small>${labels[n]||"كل أسئلة الموضوع"}</small></span></label>`).join("");
+  $("countSeg").querySelectorAll("input").forEach(i=>i.onchange=note);
+  note();
+}
+const qn=n=>n>=3&&n<=10?`${n} أسئلة`:`${n} سؤالاً`, mn=n=>n>=3&&n<=10?`${n} دقائق`:`${n} دقيقة`;
+function note(){
+  const n = +val("cnt"), exam = val("mode")==="exam";
+  $("fN").textContent = n;
+  $("timeNote").textContent = `${qn(n)} بلا مؤقت، وبعد كل سؤال شرح وبطاقة دراسة للموضوع`;
+}
+document.querySelectorAll('input[name=mode]').forEach(i=>i.onchange=note);
+buildGrid();
+counts();
+
+function start(indices){
+  const mode = val("mode");
+  let list;
+  if(indices){ list = shuffle(indices); }
+  else{
+    const n = +val("cnt");
+    const pool = Q.map((q,i)=>i).filter(i=>inPool(Q[i]));
+    const sitP = shuffle(pool.filter(i=>Q[i].m)), knP = shuffle(pool.filter(i=>!Q[i].m));
+    if(sitP.length && knP.length){
+      let nk = Math.min(knP.length, Math.round(n*0.1)), ns = Math.min(sitP.length, n-nk);
+      nk = Math.min(knP.length, n-ns);
+      list = shuffle(sitP.slice(0,ns).concat(knP.slice(0,nk)));
+    } else list = shuffle(pool).slice(0,n);
+  }
+  S = { mode, items: list.map(qi=>{const n=Q[qi].o.length, base=[...Array(n).keys()]; return {qi, order: Q[qi].ns?base:shuffle(base), ans:null, flag:false};}), idx:0, t0:Date.now(), time: mode==="exam"? list.length*60 : null, timerId:null };
+  show("quiz");
+  $("paletteBox").classList.add("hidden"); $("paletteBtn").setAttribute("aria-expanded","false");
+  if(S.time){ $("timer").classList.remove("hidden"); tick(); S.timerId=setInterval(tick,1000);} else $("timer").classList.add("hidden");
+  render();
+}
+function tick(){
+  const left = S.time - Math.floor((Date.now()-S.t0)/1000);
+  if(left<=0){ $("timer").lastChild.textContent="00:00"; finish(); return; }
+  const m=Math.floor(left/60), s=left%60;
+  $("timer").innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/></svg>${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+  $("timer").classList.toggle("low", left<120);
+}
+function show(id){
+  ["start","quiz","results"].forEach(x=>$(x).classList.toggle("hidden",x!==id));
+  $("nav").classList.toggle("hidden", id!=="quiz");
+  window.scrollTo({top:0});
+}
+function render(){
+  const it = S.items[S.idx], q = Q[it.qi], n=S.items.length;
+  const answered = S.items.filter(x=>x.ans!==null||x.rev).length;
+  $("qCounter").innerHTML = `${S.idx+1} <small>من ${n} · دُرس ${answered}</small>`;
+  $("prog").style.width = (answered/n*100)+"%";
+  $("qMeta").innerHTML = `<span class="tag ${q.m?"sit":"kn"}">${q.m?"موقف":"معرفة"}</span>${q.m?`<span class="tag">${DOM[q.d]}</span>`:""}<span class="tag">${q.t}</span>`;
+  $("qText").textContent = q.q;
+  const locked = it.ans!==null || it.rev;
+  $("opts").innerHTML = it.order.map((oi,k)=>{
+    let cls="opt";
+    if(it.ans===oi) cls+=" sel";
+    if(locked){ cls=cls.replace(" sel",""); if(oi===q.a) cls+=" ok"; else if(it.ans===oi) cls+=" bad"; }
+    return `<button class="${cls}" data-o="${oi}" ${locked?"disabled":""} aria-pressed="${it.ans===oi}"><span class="b">${LET[k]}</span><span>${q.o[oi]}</span></button>`;
+  }).join("");
+  $("opts").querySelectorAll(".opt").forEach(b=>b.onclick=()=>choose(+b.dataset.o));
+  const ex=$("explain");
+  $("revealBtn").classList.toggle("hidden", locked);
+  if(locked){
+    const ok=it.ans===q.a;
+    ex.className="explain"+(ok?"":" no");
+    const head = it.ans===null ? "الإجابة الصحيحة: "+q.o[q.a] : ok ? "إجابة صحيحة: "+q.o[q.a] : "الإجابة الأدق: "+q.o[q.a];
+    ex.innerHTML = `<strong>${head}</strong>${!ok&&it.ans!==null?`<div class="picked">اخترت: ${q.o[it.ans]}</div>`:""}<span class="why"><b>لماذا؟</b> ${q.e}</span>`;
+    const c=CARDS[q.c];
+    $("studyBox").innerHTML = `<details class="study" open><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v15H6a2 2 0 0 0-2 1.5zM4 19.5A2 2 0 0 0 6 21h14"/></svg>ادرس الموضوع: ${c.t}<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></summary><div class="sb">${c.h}</div></details>`;
+  } else { ex.className="explain hidden"; $("studyBox").innerHTML=""; }
+  $("prevBtn").disabled = S.idx===0;
+  $("nextLbl").textContent = S.idx===n-1 ? "إنهاء" : "التالي";
+  $("flagBtn").classList.toggle("on", it.flag); $("flagBtn").setAttribute("aria-pressed", it.flag);
+  $("palette").innerHTML = S.items.map((x,i)=>`<button class="${x.ans!==null||x.rev?"ans":""} ${x.flag?"flag":""} ${i===S.idx?"cur":""}" data-i="${i}" aria-label="السؤال ${i+1}">${i+1}</button>`).join("");
+  $("palette").querySelectorAll("button").forEach(b=>b.onclick=()=>go(+b.dataset.i));
+}
+function choose(oi){
+  const it=S.items[S.idx];
+  if(it.ans!==null || it.rev) return;
+  it.ans=oi; render();
+  setTimeout(()=>{ const e=$("explain"); if(e) e.scrollIntoView({behavior:"smooth",block:"start"}); },60);
+}
+function go(i){ if(i<0||i>=S.items.length) return; S.idx=i; render(); window.scrollTo({top:0,behavior:"smooth"}); }
+function toast(t){ const d=document.createElement("div"); d.className="toast"; d.textContent=t; document.body.appendChild(d); setTimeout(()=>d.remove(),1400); }
+function modal(title, body, ok, cancel, onOk){
+  $("mTitle").textContent=title; $("mBody").innerHTML=body; $("mOk").textContent=ok; $("mCancel").textContent=cancel;
+  $("modal").classList.remove("hidden"); $("mOk").focus();
+  $("mOk").onclick=()=>{ $("modal").classList.add("hidden"); onOk(); };
+  $("mCancel").onclick=()=>$("modal").classList.add("hidden");
+}
+$("prevBtn").onclick=()=>go(S.idx-1);
+$("nextBtn").onclick=()=>{ if(S.idx<S.items.length-1) go(S.idx+1); else confirmFinish(); };
+$("flagBtn").onclick=()=>{ const it=S.items[S.idx]; it.flag=!it.flag; render(); toast(it.flag?"عُلّم السؤال للمراجعة":"أُلغي التعليم"); };
+$("paletteBtn").onclick=()=>{ const h=$("paletteBox").classList.toggle("hidden"); $("paletteBtn").setAttribute("aria-expanded",!h); };
+$("submitBtn").onclick=confirmFinish;
+$("revealBtn").onclick=()=>{ const it=S.items[S.idx]; it.rev=true; render(); setTimeout(()=>$("explain").scrollIntoView({behavior:"smooth",block:"start"}),60); };
+$("startBtn").onclick=()=>start();
+$("exitBtn").onclick=()=>modal("العودة إلى الصفحة الرئيسية؟","<p class='muted'>ستبدأ جلسة جديدة في المرة القادمة.</p>","عُد للرئيسية","تابع الدراسة",()=>{clearInterval(S.timerId); S=null; show("start");});
+function confirmFinish(){
+  const un = S.items.filter(x=>x.ans===null).length, fl=S.items.filter(x=>x.flag).length;
+  let b="";
+  const done=S.items.filter(x=>x.ans!==null||x.rev).length;
+  b=`<p class='muted'>درست ${done} من ${S.items.length} سؤالاً.</p>`;
+  if(fl) b+=`<p class='muted'>علّمت ${fl} للمراجعة، وستجدها في الملخص.</p>`;
+  modal("إنهاء جلسة الدراسة؟", b, "اعرض الملخص", "تابع الدراسة", finish);
+}
+document.addEventListener("keydown",e=>{
+  if(!S || $("quiz").classList.contains("hidden") || !$("modal").classList.contains("hidden")) return;
+  if(e.target.closest && e.target.closest("input,textarea")) return;
+  const it=S.items[S.idx];
+  const map={"1":0,"2":1,"3":2,"4":3,"5":4};
+  if(map[e.key]!==undefined && it.order[map[e.key]]!==undefined){ choose(it.order[map[e.key]]); e.preventDefault(); }
+  else if(e.key==="ArrowLeft"){ $("nextBtn").click(); e.preventDefault(); }
+  else if(e.key==="ArrowRight"){ go(S.idx-1); e.preventDefault(); }
+  else if(e.key==="f"||e.key==="F"||e.key==="ب"){ $("flagBtn").click(); }
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape" && !$("modal").classList.contains("hidden")) $("mCancel").click(); });
+
+function finish(){
+  clearInterval(S.timerId);
+  const n=S.items.length, correct=S.items.filter(x=>x.ans===Q[x.qi].a).length, pct=Math.round(correct/n*100);
+  const secs=Math.floor((Date.now()-S.t0)/1000);
+  $("scorePct").textContent=pct+"%";
+  $("scoreRaw").textContent=`أصبت ${correct} من ${n} من المحاولة الأولى`;
+  $("scoreTime").textContent=`مدة الجلسة: ${Math.floor(secs/60)} دقيقة`;
+  $("scoreMsgH").textContent = "ملخص جلسة الدراسة";
+  $("scoreMsg").textContent = "ابدأ مراجعتك بالمواضيع الأضعف أدناه، ثم أعد الأسئلة التي لم تُصبها حتى تتقنها.";
+  const agg=(key)=>{const m={}; S.items.forEach(x=>{const k=key(Q[x.qi]); m[k]=m[k]||{c:0,n:0}; m[k].n++; if(x.ans===Q[x.qi].a)m[k].c++;}); return m;};
+  const dm=agg(q=>q.d);
+  $("domainBars").innerHTML=Object.keys(DOM).filter(k=>dm[k]).map(k=>{const p=Math.round(dm[k].c/dm[k].n*100);return `<div class="meter"><div class="lab"><span>${DOM[k]}</span><span class="muted">${dm[k].c} من ${dm[k].n} · <bdi>${p}%</bdi></span></div><div class="bar"><div style="width:0" data-w="${p}"></div></div></div>`;}).join("");
+  const tm=agg(q=>q.t);
+  $("topicTable").innerHTML=Object.entries(tm).sort((a,b)=>a[1].c/a[1].n-b[1].c/b[1].n).map(([t,v])=>{const p=Math.round(v.c/v.n*100); const col=p>=70?"var(--ok)":p>=50?"var(--flag)":"var(--bad)"; return `<div class="trow"><span>${t}</span><span class="n">${v.c}/${v.n}</span><div class="mini" title="${p}%"><div style="width:${p}%;background:${col}"></div></div></div>`;}).join("");
+  renderReview();
+  show("results");
+  const fg=$("ringFg"); fg.style.stroke = pct>=70?"var(--ok)":pct>=50?"var(--flag)":"var(--sheet)";
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    fg.style.strokeDashoffset = 351.86*(1-pct/100);
+    document.querySelectorAll("#domainBars .bar div").forEach(d=>d.style.width=d.dataset.w+"%");
+  }));
+}
+function renderReview(){
+  const f=val("rf");
+  const rows=S.items.map((x,i)=>({x,i})).filter(({x})=>f==="all"||x.ans!==Q[x.qi].a);
+  $("review").innerHTML = rows.length ? rows.map(({x,i})=>{const q=Q[x.qi], ok=x.ans===q.a;
+    return `<div class="rev ${ok?"c":""}"><div class="small muted">السؤال ${i+1} · ${q.t}</div><div class="q">${q.q}</div>
+    ${ok?"":`<div class="a">إجابتك: ${x.ans===null?"بلا إجابة":q.o[x.ans]}</div>`}
+    <div class="a ok">الصحيحة: ${q.o[q.a]}</div>
+    <div class="e">${q.e}</div></div>`;}).join("") : `<p class="muted">لا توجد أخطاء. أحسنت!</p>`;
+}
+document.querySelectorAll('input[name=rf]').forEach(i=>i.onchange=renderReview);
+$("retryWrong").onclick=()=>{ const w=S.items.filter(x=>x.ans!==Q[x.qi].a).map(x=>x.qi); if(!w.length){toast("لا توجد أسئلة خاطئة لإعادتها");return;} start(w); };
+$("newExam").onclick=()=>show("start");
+window.addEventListener("beforeunload",e=>{ if(S && !$("quiz").classList.contains("hidden")){ e.preventDefault(); e.returnValue=""; } });
+</script>
+</body>
+</html>
